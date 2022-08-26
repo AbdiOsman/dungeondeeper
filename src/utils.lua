@@ -130,7 +130,7 @@ function lineofsite(x1, y1, x2, y2, map)
     local err, e2 = dx - dy, nil
 
     while not (x1 == x2 and y1 == y2) do
-        if not frst and map:gettileprops(x1, y1, true).blocksight then return false end
+        if not frst and map:blockingSight(x1, y1) then return false end
         frst = false
         e2 = err + err
         if e2 > -dy then

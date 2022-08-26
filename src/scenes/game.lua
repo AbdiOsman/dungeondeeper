@@ -72,7 +72,7 @@ function Game:draw()
         for _, v in pairs(self.lower) do
             v:draw()
         end
-        -- self:drawfog()
+        self:drawfog()
         for _, v in pairs(self.upper) do
             v:draw()
         end
@@ -95,12 +95,23 @@ end
 function Game:clearFog(px, py)
     for x = 0, self.map.width do
         for y = 0, self.map.height do
-            if lineofsite(px, py, x, y, self.map) then
-                self.fogmap[x][y] = 0
+            if distance(px, py, x, y) <= self.hero.sightrange and lineofsite(px, py, x, y, self.map) then
+                self:clearFogTile(x, y)
             end
         end
     end
-    self.fogmap[px][py] = 0
+end
+
+function Game:clearFogTile(x, y)
+    self.fogmap[x][y] = 0
+    if not self.map:blockingSight(x, y) then
+        for i = 1, 4 do
+            local tx, ty = x + DIRX[i], y + DIRY[i]
+            if self.map:blockingSight(tx, ty) and self.map:inBounds(x, y) then
+                self.fogmap[tx][ty] = 0
+            end
+        end
+    end
 end
 
 function Game:createFog()

@@ -30,6 +30,9 @@ YELLOW = { 251 / 255, 242 / 255, 54 / 255 }
 RED = { 200 / 255, 40 / 255, 40 / 255 }
 LIGHTGRAY = { 195 / 255, 195 / 255, 201 / 255 }
 
+DIRX = { -1, 1, 0, 0 }
+DIRY = { 0, 0, -1, 1 }
+
 Input.bind('up',            'up')
 Input.bind('down',          'down')
 Input.bind('left',          'left')

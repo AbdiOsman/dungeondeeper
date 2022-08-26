@@ -9,6 +9,7 @@ function Entity.new(args, map)
         anim = args.anim,
         map = map,
         id = args.id,
+        sightrange = args.sightrange,
         trigX = -1,
         trigY = -1,
         dx = 0,
@@ -152,10 +153,14 @@ function Entity:setTilePos(x, y)
     self.map:addEntity(self)
 end
 
+function Entity:inSightRange(tx, ty)
+    return lineofsite(self.tileX, self.tileY, tx, ty, self.map) and distance(self.tileX, self.tileY, tx, ty) <= self.sightrange
+end
+
 function Entity:planwait(target)
     local game = gStack:top()
 
-    if lineofsite(self.tileX, self.tileY, target.tileX, target.tileY, self.map) then
+    if self:inSightRange(target.tileX, target.tileY) then
         self.state = self.planattack
         self.tx, self.ty = target.tileX, target.tileY
 
@@ -166,14 +171,13 @@ function Entity:planwait(target)
 end
 
 function Entity:planattack(target)
-    local dirx = { -1, 1, 0, 0 }
-    local diry = { 0, 0, -1, 1 }
     local best, bx, by = 9999, 0, 0
 
     if self.move or self.bump then
         return
     end
 
+    -- get player position
     if lineofsite(self.tileX, self.tileY, target.tileX, target.tileY, self.map) then
         self.tx, self.ty = target.tileX, target.tileY
     end
@@ -186,7 +190,7 @@ function Entity:planattack(target)
     else
         for i = 1, 4 do
             repeat
-                local dx, dy = dirx[i], diry[i]
+                local dx, dy = DIRX[i], DIRY[i]
                 local blocked = self.map:isBlocked(self.tileX + dx, self.tileY + dy)
                 local ent = self.map:getEntity(self.tileX + dx, self.tileY + dy)
                 if ent and ent.mob then break end

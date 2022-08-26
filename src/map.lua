@@ -87,6 +87,11 @@ function Map:isBlocked(x, y)
     return props.blocker
 end
 
+function Map:blockingSight(x, y)
+    local props = self:gettileprops(x, y)
+    return props.blocksight
+end
+
 function Map:getEntity(x, y)
     local index = self:tiletoindex(x, y)
     return self.entities[index]
@@ -118,4 +123,8 @@ end
 function Map:getTrigger(x, y)
     local index = self:tiletoindex(x, y)
     return self.triggers[index]
+end
+
+function Map:inBounds(x, y)
+    return (x > 0 and x < self.width) and (y > 0 and y < self.height)
 end

@@ -4,50 +4,15 @@ gEntities =
         texture = "tileset.png",
         tileX = 1,
         tileY = 1,
+        sightrange = 4,
         anim = {17, 18, 17, 19}
     },
     slime = {
         texture = "tileset.png",
         tileX = 1,
         tileY = 3,
+        sightrange = 4,
         anim = {20, 21, 22, 23}
-    },
-    pickup =
-    {
-        texture = "tileset.png",
-        anim = { 11, 12 },
-    },
-    chest1 =
-    {
-        texture = "tileset.png",
-        anim = { 4 },
-        sound = "chest.wav"
-    },
-    chest2 =
-    {
-        texture = "tileset.png",
-        anim = { 5 },
-        sound = "chest.wav"
-
-    },
-    vase1 =
-    {
-        texture = "tileset.png",
-        anim = { 6 },
-        sound = "vase.wav"
-    },
-    vase2 =
-    {
-        texture = "tileset.png",
-        anim = { 7 },
-        sound = "vase.wav"
-    },
-    door =
-    {
-        texture = "tileset.png",
-        anim = { 9 },
-        openFrame = 10,
-        sound = "door.wav"
     }
 }
 
