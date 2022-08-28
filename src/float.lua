@@ -41,6 +41,6 @@ function Float:draw()
     love.graphics.setColor(1, 1, 1)
 end
 
-function createFloatAt(x, y, txt, color)
-    table.insert(gStack:top().upper, Float.new({ x = x, y = y, anim_y = 18, duration = 0.5, txt = txt, color = color or YELLOW }))
+function createFloatAt(x, y, txt, dur, color)
+    table.insert(gStack:top().upper, Float.new({ x = x, y = y, anim_y = 18, duration = dur or 0.5, txt = txt, color = color or YELLOW }))
 end

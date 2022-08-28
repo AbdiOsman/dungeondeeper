@@ -17,6 +17,7 @@ function Selection.new(args)
         displaystart = 1,
         cursor = 1,
         remap = args.remap or nil,
+        colors = {},
         onSelection = args.onSelection or function() end
     }
 
@@ -74,12 +75,18 @@ function Selection:draw()
             self.cursorY = topOffset + 4
             self.cursorsprite:drawq(self.x + 6, self.cursorY, 34)
         end
+
+        if self.colors[i] then love.graphics.setColor(self.colors[i]) end
+
         local txt = self.remap ~= nil and self.remap(self.data[i]) or self.data[i]
         if txt then
             love.graphics.print(txt, self.x + TILESIZE, topOffset + 4)
         else
             love.graphics.print("---", self.x + TILESIZE, topOffset + 4)
         end
+
+        love.graphics.setColor(1, 1, 1)
+
         topOffset = topOffset + h
     end
 

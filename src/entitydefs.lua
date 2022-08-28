@@ -24,10 +24,10 @@ gPartyStats =
         hp_max = 5,
         mp = 1,
         mp_max = 1,
-        strength = 1,
-        defense = 1,
-        magic = 1,
-        resist = 1
+        strength = 2,
+        defense = 2,
+        magic = 5,
+        resist = 5
     }
 }
 
@@ -35,13 +35,16 @@ gEnemyStats =
 {
     slime =
     {
-        hp = 1,
-        hp_max = 1,
-        mp = 0,
-        mp_max = 0,
-        strength = 1,
-        defense = 1,
-        magic = 0,
-        resist = 0
+        stats =
+        {
+            hp = 1,
+            hp_max = 1,
+            mp = 0,
+            mp_max = 0,
+            strength = 1,
+            defense = 1,
+            magic = 0,
+            resist = 0
+        }
     }
 }

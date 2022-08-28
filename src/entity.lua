@@ -10,16 +10,18 @@ function Entity.new(args, map)
         map = map,
         id = args.id,
         sightrange = args.sightrange,
-        trigX = -1,
-        trigY = -1,
-        dx = 0,
-        dy = 0,
-        tx = 0,
-        ty = 0,
-        sx = 0,
-        sy = 0,
-        mx = 0,
-        my = 0,
+        trigX = -1, -- triggerX
+        trigY = -1, -- triggerY
+        x = 0,  -- positionX
+        y = 0,  -- positionY
+        dx = 0, -- directionX
+        dy = 0, -- directionY
+        tx = 0, -- targetX
+        ty = 0, -- targetY
+        sx = 0, -- startX
+        sy = 0, -- startY
+        mx = 0, -- movementX
+        my = 0, -- movementY
         sprite = Sprite.new(Texture.find("tileset.png")),
         movespeed = 0.3,
         move = false,
@@ -64,12 +66,18 @@ function Entity:update(dt)
 
         if not self.bump then
             if self.player then
-                gStack:top().handleInput = gStack:top().handleEnemies
+                local blocked = self.map:isBlocked(self.trigX, self.trigY)
                 local trigger = self.map:getTrigger(self.trigX, self.trigY)
+                -- gStack:top().handleInput = gStack:top().handleEnemies
+                -- Should players be allowed to bump into walls to pass a turn?
                 if trigger and self.player then
                     trigger.onUse()
-                    self.trigX, self.trigY = -1, -1
+                    gStack:top().handleInput = gStack:top().handleEnemies
+                elseif not blocked then
+                    gStack:top().handleInput = gStack:top().handleEnemies
                 end
+                self.trigX, self.trigY = -1, -1
+                STOPCAMERA = false
             end
         else
             self.tween = Tween.new(0, TILESIZE, 0.07)
@@ -104,12 +112,14 @@ function Entity:movement(dx, dy)
         self.mx, self.my = dx * 0.4, dy * 0.4
         self.bump = true
         self.move = true
+        STOPCAMERA = true
     elseif self.player and target and target.mob then
         self.tween = Tween.new(0, TILESIZE, 0.07)
         self.sx, self.sy = self:getPosition()
         self.mx, self.my = dx * 0.4, dy * 0.4
         self.bump = true
         self.move = true
+        STOPCAMERA = true
         attack(self, target)
     end
 end

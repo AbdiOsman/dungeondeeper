@@ -8,6 +8,7 @@ end
 
 function resize(s, flags)
     love.window.setMode(s * GW, s * GH)
+    Camera:setScale(2, 2)
     -- love.window.setMode(s * GW, s * GH, flags)
     -- if flags and flags.fullscreen then
     --     GW = love.graphics.getWidth() / 2
@@ -147,4 +148,49 @@ end
 
 function clamp(x, a, b)
     return math.max(a, math.min(b, x))
-  end
+end
+
+function swap(t, a, b)
+    t[a], t[b] = t[b], t[a]
+    return t
+end
+
+function count_all(f)
+    local seen = {}
+	local count_table
+	count_table = function(t)
+		if seen[t] then return end
+		f(t)
+		seen[t] = true
+		for k,v in pairs(t) do
+			if type(v) == "table" then
+				count_table(v)
+			elseif type(v) == "userdata" then
+				f(v)
+			end
+		end
+	end
+	count_table(_G)
+end
+
+function type_count()
+	local counts = {}
+	local enumerate = function (o)
+		local t = type_name(o)
+		counts[t] = (counts[t] or 0) + 1
+	end
+	count_all(enumerate)
+	return counts
+end
+
+global_type_table = nil
+function type_name(o)
+	if global_type_table == nil then
+		global_type_table = {}
+		for k,v in pairs(_G) do
+			global_type_table[v] = k
+		end
+		global_type_table[0] = "table"
+	end
+	return global_type_table[getmetatable(o) or 0] or "Unknown"
+end

@@ -8,16 +8,18 @@ function World.new()
         gold = 0,
         items =
         {
-            { id = 1, count = 1 },
-            { id = 2, count = 1 },
             { id = 3, count = 1 },
-            { id = 4, count = 1 }
+            { id = 4, count = 1 },
+            { id = 5, count = 1 },
+            { id = 2, count = 1 },
+            { id = 1, count = 1 },
         },
         party =
         {
             {
                 name = "Hero",
                 stats = {},
+                modifiers = {},
                 equipment =
                 {
                     weapon = -1,
@@ -50,6 +52,51 @@ end
 
 function World:goldAsString()
     return string.format("%d", self.gold)
+end
+
+function World:getCurrentMember()
+    return self.party[CURRENTMEMEBER]
+end
+
+function World:equip(slot, item)
+    local mem = self:getCurrentMember()
+    local previtem = mem.equipment[slot]
+    mem.equipment[slot] = -1
+    if previtem ~= -1 then
+        mem.modifiers[slot] = nil
+    end
+
+    if not item then
+        return
+    end
+
+    mem.equipment[slot] = item.id
+    local modifier = ItemDB[item.id].stats or {}
+    self:addmodifier(slot, modifier)
+end
+
+function World:unequip(slot)
+    self:equip(slot, nil)
+end
+
+function World:addmodifier(id, modifier)
+    self:getCurrentMember().modifiers[id] =
+    {
+        add     = modifier.add or {},
+        mult    = modifier.mult or {}
+    }
+end
+
+function World:getStat(ent, id)
+    local total = ent.stats[id] or 0
+    local multiplier = 0
+
+    for _, v in pairs(ent.modifiers or {}) do
+        total = total + (v.add[id] or 0)
+        multiplier = multiplier + (v.mult[id] or 0)
+    end
+
+    return total + (total * multiplier)
 end
 
 function World:addItem(itemId, count)

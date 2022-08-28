@@ -13,7 +13,7 @@ function Inventory.new(parent)
             equipPanel = Panel.new(),
             statsPanel = Panel.new(),
         },
-        char = gWorld.party[1],
+        char = gWorld:getCurrentMember(),
         current = 1,
         closed = false,
     }
@@ -29,7 +29,6 @@ function Inventory.new(parent)
     this.usePanel = Panel.new()
 
     local data = {}
-
     for _, v in ipairs(gWorld.items) do
         table.insert(data, v.id)
     end
@@ -51,6 +50,12 @@ function Inventory.new(parent)
             end,
             onSelection = function(...) this:onClick(...) end
         }
+    }
+
+    this.selections[1].colors =
+    {
+        [1] = gWorld:getCurrentMember().equipment.weapon ~= -1 and YELLOW or nil,
+        [2] = gWorld:getCurrentMember().equipment.armor ~= -1 and YELLOW or nil,
     }
 
     x, y = this.panels.equipPanel:getAnchors()
@@ -82,7 +87,7 @@ function Inventory.new(parent)
         x = x,
         y = y,
         align = "right",
-        width = 55,
+        width = 60,
         labels =
         {
             "HP:",
@@ -94,12 +99,12 @@ function Inventory.new(parent)
         },
         values =
         {
-            this.char.stats.hp_max,
-            this.char.stats.mp_max,
-            this.char.stats.strength,
-            this.char.stats.defense,
-            this.char.stats.magic,
-            this.char.stats.resist,
+            gWorld:getStat(gWorld:getCurrentMember(), "hp_max"),
+            gWorld:getStat(gWorld:getCurrentMember(), "mp_max"),
+            gWorld:getStat(gWorld:getCurrentMember(), "strength"),
+            gWorld:getStat(gWorld:getCurrentMember(), "defense"),
+            gWorld:getStat(gWorld:getCurrentMember(), "magic"),
+            gWorld:getStat(gWorld:getCurrentMember(), "resist"),
         }
     }
 
@@ -117,6 +122,16 @@ function Inventory:update(dt)
     else
         self.selections[self.current]:handleInput(dt)
     end
+
+    self.statList.values =
+    {
+        gWorld:getStat(gWorld:getCurrentMember(), "hp_max"),
+        gWorld:getStat(gWorld:getCurrentMember(), "mp_max"),
+        gWorld:getStat(gWorld:getCurrentMember(), "strength"),
+        gWorld:getStat(gWorld:getCurrentMember(), "defense"),
+        gWorld:getStat(gWorld:getCurrentMember(), "magic"),
+        gWorld:getStat(gWorld:getCurrentMember(), "resist"),
+    }
 end
 
 function Inventory:onClick(index, id)
@@ -124,18 +139,24 @@ function Inventory:onClick(index, id)
 
     if self.current == 1 then
         local item = ItemDB[id]
+        local cursor = self.selections[1].cursor
 
-        local data
+        local data = {}
+        local equip = gWorld:getCurrentMember().equipment
         if item.type == "useable" then
-            data = { "Use", "Trash" }
-        elseif item.type == "weapon" or item.type == "armor" then
-            data = { "Equip", "Trash" }
+            table.insert(data, "Use")
+        elseif item.type == "weapon" then
+            table.insert(data, (equip.weapon ~= -1 and cursor == 1) and "Unequip" or "Equip")
+        elseif item.type == "armor" then
+            table.insert(data, (equip.armor ~= -1 and cursor == 2) and "Unequip" or "Equip")
         end
+        table.insert(data, (data[1] == "Use" or data[1] == "Equip") and "Throw" or nil)
+        table.insert(data, (data[1] == "Use" or data[1] == "Equip") and "Trash" or nil)
 
-        local h = Font.monogram_16:getHeight() * #data + 10
+        local h = Font.monogram_16:getHeight() * #data + 12
 
         local x, y = GW/2 + 40, self.selections[1].cursorY
-        self.usePanel:position(x, y, 55, h)
+        self.usePanel:position(x, y, 65, h)
         table.insert(self.selections, Selection.new
         {
             x = x,
@@ -152,22 +173,41 @@ function Inventory:onClick(index, id)
         self.current = 2
     elseif self.current == 2 then
         local select = self.selections[1]
+        local item = ItemDB[select.data[select.cursor]]
         if id == "Use" then
         elseif id == "Equip" then
-            local item = ItemDB[select.data[select.cursor]]
+            gWorld:equip(item.type, item)
             if item.type == "weapon" then
-                self.equipList.values[1] = item.name
+                self:equipItem(1, select, item)
             elseif item.type == "armor" then
-                self.equipList.values[2] = item.name
+                self:equipItem(2, select, item)
             end
+        elseif id == "Unequip" then
+            if item.type == "weapon" then
+                select.colors[1] = nil
+                self.equipList.values[1] = ""
+            elseif item.type == "armor" then
+                self.equipList.values[2] = ""
+                select.colors[2] = nil
+            end
+            gWorld:unequip(item.type, nil)
+        elseif id == "Throw" then
         elseif id == "Trash" then
+            table.remove(select.data, select.cursor)
             table.remove(gWorld.items, select.cursor)
         end
 
         self.current = 1
-        table.remove(select.data, select.cursor)
         table.remove(self.selections, #self.selections)
     end
+end
+
+function Inventory:equipItem(slot, selection, item)
+    self.equipList.values[slot] = item.name
+
+    swap(selection.data, selection.cursor, slot)
+    swap(gWorld.items, selection.cursor, slot)
+    selection.colors[slot] = YELLOW
 end
 
 function Inventory:enter() end

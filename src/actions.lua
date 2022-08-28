@@ -11,8 +11,9 @@ Actions =
             ent:setPosition(x * TILESIZE, y * TILESIZE)
             map:addEntity(ent)
             table.insert(map.mobs, ent)
-            local stats = shallowClone(gEnemyStats[enemytable[index]])
-            table.insert(gWorld.monsters, stats)
+            local statDef = shallowClone(gEnemyStats[enemytable[index]])
+            statDef.stats = shallowClone(statDef.stats)
+            table.insert(gWorld.monsters, statDef)
         end
     end,
     addmsg = function(x, y, map, txt)

@@ -13,18 +13,14 @@ function Game.new(stack, map, startpos)
 
     setmetatable(this, Game)
 
-    Camera:setScale(2, 2)
-    Camera:setBounds(0, 0, TILESIZE * 2, TILESIZE * 2)
-
     local def = gEntities.hero
     this.hero = Entity.new(def, map)
     this.hero.id = 1
     this.hero:setPosition(startpos.x * TILESIZE, startpos.y * TILESIZE)
     this.hero.player = true
-    gWorld.party[1].stats = shallowClone(gPartyStats.hero)
+    gWorld:getCurrentMember().stats = shallowClone(gPartyStats.hero)
 
     this.map:addEntity(this.hero)
-    this.map:lookat(this.hero.tileX, this.hero.tileY)
 
     this.handleInput = this.handleHero
 
@@ -44,6 +40,9 @@ function Game:update(dt)
     self:updatelayers(dt)
     for _, v in pairs(self.map.entities) do
         v:update(dt)
+    end
+    if not STOPCAMERA then
+        Camera:setPosition(self.hero.x - (GW/2)/SCALE, self.hero.y - (GH/2)/SCALE)
     end
 end
 
@@ -128,19 +127,22 @@ function Game:createFog()
 end
 
 function Game:handleHero()
-    local dx, dy = 0, 0
+    local inputs = {}
     if Input.held("up") then
-        dy = -1
-    elseif Input.held("down") then
-        dy = 1
-    elseif Input.held("left") then
-        dx = -1
-    elseif Input.held("right") then
-        dx = 1
+        table.insert(inputs, {0, -1})
+    end
+    if Input.held("down") then
+        table.insert(inputs, {0, 1})
+    end
+    if Input.held("left") then
+        table.insert(inputs, {-1, 0})
+    end
+    if Input.held("right") then
+        table.insert(inputs, {1, 0})
     end
 
-    if dx ~= 0 or dy ~= 0 then
-        self.hero:movement(dx, dy)
+    if #inputs > 0 then
+        self.hero:movement(inputs[1][1], inputs[1][2])
         self:clearFog(self.hero.tileX, self.hero.tileY)
     end
 end

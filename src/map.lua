@@ -31,7 +31,9 @@ function Map:draw()
     for y = top, bottom do
         for x = left, right do
             local tile = self:get(x, y)
-            if tile > 0 then
+            if tile == 0 then
+                self.sprite:drawq(x * TILESIZE, y * TILESIZE, 49)
+            else
                 self.sprite:drawq(x * TILESIZE, y * TILESIZE, tile)
             end
         end
@@ -40,10 +42,6 @@ function Map:draw()
     for _, v in pairs(self.entities) do
         v:draw()
     end
-end
-
-function Map:lookat(x, y)
-    Camera:setPosition((x*16) - (GW/2) / SCALE, (y*16) - (GH/2) / SCALE)
 end
 
 function Map:get(x, y)

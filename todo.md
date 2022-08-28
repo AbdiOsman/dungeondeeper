@@ -33,5 +33,5 @@
     [X] Bump
         [X] Attack
     [] Party?
-    [] Fog of War
+    [X] Fog of War
     [] Random Dungeon

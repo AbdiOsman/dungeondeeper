@@ -14,12 +14,27 @@ ItemDB =
         use_restriction = nil,
     },
     {
-        name = "Short Sword",
+        name = "Wood Staff",
         type = "weapon",
         icon = "sword",
         restriction = {},
-        description = "A standard sword great for beginners.",
-        stats = { add = { attack = 5 } }
+        description = "Staff made of wood. It's pretty weak.",
+        stats = { add = { strength = 1, magic = 1 } }
+    },
+    {
+        name = "Iron Staff",
+        type = "weapon",
+        icon = "sword",
+        restriction = {},
+        description = "A simple staff great for beginners.",
+        stats = { add = { strength = 3, magic = 3 } }
+    },
+    {
+        name = "Rags",
+        type = "armor",
+        icon = "plate",
+        restriction = {},
+        description = "You can barley call these clothes.",
     },
     {
         name = "Leather Armor",

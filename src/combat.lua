@@ -1,31 +1,41 @@
 function attack(attacker, defender)
-    local attackerStats
-    local defenderStats
-
+    local atk
+    local def
     if attacker.player then
-        attackerStats = gWorld.party[attacker.id].stats
-        defenderStats = gWorld.monsters[defender.id]
+        atk = gWorld.party[attacker.id]
+        def = gWorld.monsters[defender.id]
     elseif attacker.mob then
-        attackerStats = gWorld.monsters[attacker.id]
-        defenderStats = gWorld.party[defender.id].stats
+        atk = gWorld.monsters[attacker.id]
+        def = gWorld.party[defender.id]
     end
 
-    local hp = defenderStats.hp
+    local start_hp = def.stats.hp
+    local damage = gWorld:getStat(atk, "strength")
+    local defense = gWorld:getStat(def, "defense")
 
-    if defenderStats.hp <= 0 then return end
-    defenderStats.hp = defenderStats.hp - attackerStats.strength
-    local x, y = defender:centerPostition()
-    if defenderStats.hp <= 0  then
+    local attack = math.max(love.math.random(0, 1), damage - defense)
+    local hp = start_hp - attack
+
+    print("HP:" .. start_hp .. " > " .. hp)
+
+    if hp <= 0  then
         defender.remove = true
+    else
+        def.stats.hp = hp
     end
+
     love.audio.play("hit.wav")
     defender.sprite.flashtime = 12
-    createFloatAt(x, y, "-" .. attackerStats.strength, RED)
 
-    print("HP:" .. hp .. " > " .. defenderStats.hp)
+    local x, y = defender:centerPostition()
+    if attack == 0 then
+        createFloatAt(x, y, "MISS!", 0.6, RED)
+    else
+        createFloatAt(x, y, "-" .. attack, nil, RED)
+    end
 
     if defender.player then
-        if defenderStats.hp <= 0 then
+        if hp <= 0 then
             local game = gStack:top()
             gStack:push(GameOver.new(gStack, game))
         end

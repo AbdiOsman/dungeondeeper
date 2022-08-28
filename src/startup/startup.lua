@@ -25,6 +25,8 @@ MASTERVOLUME = 0.6 -- Maximum volume for all sounds
 BGMVOLUME = 1
 SEVOLUME = 0.1
 
+CURRENTMEMEBER = 1
+
 CORAL = { 255 / 255, 127 / 255, 80 / 255 }
 YELLOW = { 251 / 255, 242 / 255, 54 / 255 }
 RED = { 200 / 255, 40 / 255, 40 / 255 }

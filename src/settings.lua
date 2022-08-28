@@ -25,7 +25,9 @@ function Settings.new(parent)
         {
             "Master Volume:",
             "Music Volume:",
-            "SE Volume:"
+            "SE Volume:",
+            -- "----------------",
+            -- "Scale:"
         }
     }
 
@@ -57,6 +59,11 @@ function Settings:update(dt)
         elseif Input.justPressed("right") then
             SEVOLUME = math.min(1, SEVOLUME + 0.10)
         end
+    elseif self.selection.cursor == 5 then
+        if Input.justPressed("right") then
+            SCALE = SCALE % 2 + 1
+            resize(SCALE)
+        end
     end
 end
 
@@ -77,4 +84,6 @@ function Settings:draw()
     love.graphics.rectangle("fill", x + 120, y + 21, 100 * BGMVOLUME, 8)
     love.graphics.rectangle("fill", x + 120, y + 33, 2, 12)
     love.graphics.rectangle("fill", x + 120, y + 35, 100 * SEVOLUME, 8)
+
+    -- love.graphics.print(SCALE .. "x", x + 120, 158)
 end
