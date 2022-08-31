@@ -6,14 +6,13 @@
 # UI
     [] Inventory
         [X] Equip
-        [] Use
+        [X] Use
         [] Throw
         [X] Trash
     [X] Status
     [] Save/Load
     [] Settings
         [X] Audio
-        [] Font Scale
         [] Window Scale
         [] Fullscreen
     [X] HP/MP Display
