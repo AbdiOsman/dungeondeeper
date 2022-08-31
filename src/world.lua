@@ -8,11 +8,18 @@ function World.new()
         gold = 0,
         items =
         {
-            { id = 3, count = 1 },
-            { id = 4, count = 1 },
-            { id = 5, count = 1 },
-            { id = 2, count = 1 },
-            { id = 1, count = 1 },
+            { id = 1 },
+            { id = 2 },
+            { id = 3 },
+            { id = 4 },
+            { id = 5 },
+            { id = 5 },
+            { id = 5 },
+            { id = 5 },
+            { id = 5 },
+            { id = 5 },
+            { id = 5 },
+            { id = 6 },
         },
         party =
         {

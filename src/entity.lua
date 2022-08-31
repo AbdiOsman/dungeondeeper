@@ -49,9 +49,7 @@ function Entity:update(dt)
 
         self.x = x
         self.y = y
-    end
-
-    if self.bump then
+    elseif self.bump then
         local value = self.tween:value()
         local x = self.sx + (value * self.mx)
         local y = self.sy + (value * self.my)
@@ -88,6 +86,13 @@ function Entity:update(dt)
             self.bump = false
         end
     end
+end
+
+function Entity:wait(time)
+    self.tween = Tween.new(0, 1, time)
+    self.sx, self.sy = self:getPosition()
+    self.mx, self.my = 0, 0
+    self.move = true
 end
 
 function Entity:movement(dx, dy)
@@ -140,7 +145,7 @@ function Entity:getPosition()
     return self.x, self.y
 end
 
-function Entity:centerPostition()
+function Entity:centerPosition()
     local x = self.x + TILESIZE / 2
     local y = self.y + TILESIZE / 2
     return x, y
@@ -174,7 +179,7 @@ function Entity:planwait(target)
         self.state = self.planattack
         self.tx, self.ty = target.tileX, target.tileY
 
-        local x, y = self:centerPostition()
+        local x, y = self:centerPosition()
         createFloatAt(x, y, "!")
     end
     game.handleInput = game.handleHero

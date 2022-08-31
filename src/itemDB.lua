@@ -54,12 +54,22 @@ ItemDB =
     {
         name = "Bale Leaf",
         type = "useable",
-        description = "Heals a minor amount. +1 HP"
+        description = "Heals a minor amount. +1 HP",
+        use =
+        {
+            hp = 1,
+            hint = "Choose target to heal."
+        }
     },
     {
         name = "Mushroom",
         type = "useable",
-        description = "Restores a minor amount. +1 MP"
+        description = "Restores a minor amount. +1 MP",
+        use =
+        {
+            mp = 1,
+            hint = "Choose target to heal."
+        }
     }
 }
 

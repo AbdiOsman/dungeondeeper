@@ -3,10 +3,9 @@
     [] Town Scene
     [X] Game Over Scene
     [X] Dungeon Scene
-    [] Multiple Dungeons
 # UI
     [] Inventory
-        [] Equip
+        [X] Equip
         [] Use
         [] Throw
         [X] Trash
@@ -14,12 +13,12 @@
     [] Save/Load
     [] Settings
         [X] Audio
-        [] Scale
+        [] Font Scale
+        [] Window Scale
         [] Fullscreen
     [X] HP/MP Display
     [X] Panel
     [X] Textbox
-    [] Scale?
 # ENEMIES
     [] Bosses
     [] Path Finding

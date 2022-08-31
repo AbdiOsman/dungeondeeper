@@ -13,7 +13,9 @@ function attack(attacker, defender)
     local damage = gWorld:getStat(atk, "strength")
     local defense = gWorld:getStat(def, "defense")
 
-    local attack = math.max(love.math.random(0, 1), damage - defense)
+    local rand = love.math.random(1, 100)
+    local min = rand < 15 and 0 or 1 -- if attack < 0 chance to do a min of 1 attack
+    local attack = math.max(min, damage - defense)
     local hp = start_hp - attack
 
     print("HP:" .. start_hp .. " > " .. hp)
@@ -27,7 +29,7 @@ function attack(attacker, defender)
     love.audio.play("hit.wav")
     defender.sprite.flashtime = 12
 
-    local x, y = defender:centerPostition()
+    local x, y = defender:centerPosition()
     if attack == 0 then
         createFloatAt(x, y, "MISS!", 0.6, RED)
     else

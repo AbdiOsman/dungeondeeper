@@ -122,16 +122,6 @@ function Inventory:update(dt)
     else
         self.selections[self.current]:handleInput(dt)
     end
-
-    self.statList.values =
-    {
-        gWorld:getStat(gWorld:getCurrentMember(), "hp_max"),
-        gWorld:getStat(gWorld:getCurrentMember(), "mp_max"),
-        gWorld:getStat(gWorld:getCurrentMember(), "strength"),
-        gWorld:getStat(gWorld:getCurrentMember(), "defense"),
-        gWorld:getStat(gWorld:getCurrentMember(), "magic"),
-        gWorld:getStat(gWorld:getCurrentMember(), "resist"),
-    }
 end
 
 function Inventory:onClick(index, id)
@@ -175,6 +165,14 @@ function Inventory:onClick(index, id)
         local select = self.selections[1]
         local item = ItemDB[select.data[select.cursor]]
         if id == "Use" then
+            local stats = gWorld:getCurrentMember().stats
+            if item.use.hp and stats.hp < stats.hp_max then
+                stats.hp = math.min(stats.hp_max, stats.hp + item.use.hp)
+                self:useItem(item.use.hp, GREEN)
+            elseif item.use.mp and stats.mp < stats.mp_max then
+                stats.mp = math.min(stats.mp_max, stats.mp + item.use.mp)
+                self:useItem(item.use.hp, BLUE)
+            end
         elseif id == "Equip" then
             gWorld:equip(item.type, item)
             if item.type == "weapon" then
@@ -191,6 +189,7 @@ function Inventory:onClick(index, id)
                 select.colors[2] = nil
             end
             gWorld:unequip(item.type, nil)
+            self:updateStatList()
         elseif id == "Throw" then
         elseif id == "Trash" then
             table.remove(select.data, select.cursor)
@@ -204,10 +203,36 @@ end
 
 function Inventory:equipItem(slot, selection, item)
     self.equipList.values[slot] = item.name
-
+    self:updateStatList()
     swap(selection.data, selection.cursor, slot)
     swap(gWorld.items, selection.cursor, slot)
     selection.colors[slot] = YELLOW
+end
+
+function Inventory:useItem(num, color)
+    self:removeItem()
+    gStack:pop()
+    local hero = gStack:top().hero
+    local x, y = hero:centerPosition()
+    createFloatAt(x, y, "+" .. num, 0.8, color)
+    hero:wait(1)
+end
+
+function Inventory:removeItem()
+    table.remove(self.selections[1].data, self.selections[1].cursor)
+    table.remove(gWorld.items, self.selections[1].cursor)
+end
+
+function Inventory:updateStatList()
+    self.statList.values =
+    {
+        gWorld:getStat(gWorld:getCurrentMember(), "hp_max"),
+        gWorld:getStat(gWorld:getCurrentMember(), "mp_max"),
+        gWorld:getStat(gWorld:getCurrentMember(), "strength"),
+        gWorld:getStat(gWorld:getCurrentMember(), "defense"),
+        gWorld:getStat(gWorld:getCurrentMember(), "magic"),
+        gWorld:getStat(gWorld:getCurrentMember(), "resist"),
+    }
 end
 
 function Inventory:enter() end
