@@ -27,7 +27,9 @@ function Entity.new(args, map)
         move = false,
         bump = false,
         remove = false,
-        tween = nil
+        tween = nil,
+        casting = false,
+        casttime = 0.1
     }
 
     setmetatable(this, Entity)
@@ -66,13 +68,16 @@ function Entity:update(dt)
             if self.player then
                 local blocked = self.map:isBlocked(self.trigX, self.trigY)
                 local trigger = self.map:getTrigger(self.trigX, self.trigY)
-                -- gStack:top().handleInput = gStack:top().handleEnemies
+                -- gGame.handleInput = gGame.handleEnemies
                 -- Should players be allowed to bump into walls to pass a turn?
-                if trigger and self.player then
+                if self.casting then
+                    self.casting = false
+                    self:wait(self.casttime)
+                elseif trigger and self.player then
                     trigger.onUse()
-                    gStack:top().handleInput = gStack:top().handleEnemies
+                    gGame.handleInput = gGame.handleEnemies
                 elseif not blocked then
-                    gStack:top().handleInput = gStack:top().handleEnemies
+                    gGame.handleInput = gGame.handleEnemies
                 end
                 self.trigX, self.trigY = -1, -1
                 STOPCAMERA = false
@@ -95,7 +100,7 @@ function Entity:wait(time)
     self.move = true
 end
 
-function Entity:movement(dx, dy)
+function Entity:movement(dx, dy, casting)
     if self.move or self.bump then
         return
     end
@@ -105,16 +110,17 @@ function Entity:movement(dx, dy)
     local blocked = self.map:isBlocked(self.tileX + dx, self.tileY + dy)
     local target = self.map:getEntity(self.tileX + dx, self.tileY + dy)
 
-    if not blocked and not target then
+    if not blocked and not target and not casting then
         self.tween = Tween.new(0, TILESIZE, self.movespeed)
         self.sx, self.sy = self:getPosition()
         self.mx, self.my = dx, dy
         self.move = true
         self:setTilePos(self.tileX + dx, self.tileY + dy)
-    elseif blocked then
+    elseif blocked or casting then
         self.tween = Tween.new(0, TILESIZE, 0.07)
         self.sx, self.sy = self:getPosition()
         self.mx, self.my = dx * 0.4, dy * 0.4
+        self.casting = casting
         self.bump = true
         self.move = true
         STOPCAMERA = true
@@ -173,7 +179,7 @@ function Entity:inSightRange(tx, ty)
 end
 
 function Entity:planwait(target)
-    local game = gStack:top()
+    local game = gGame
 
     if self:inSightRange(target.tileX, target.tileY) then
         self.state = self.planattack

@@ -54,8 +54,8 @@ function Inventory.new(parent)
 
     this.selections[1].colors =
     {
-        [1] = gWorld:getCurrentMember().equipment.weapon ~= -1 and YELLOW or nil,
-        [2] = gWorld:getCurrentMember().equipment.armor ~= -1 and YELLOW or nil,
+        [1] = this.char.equipment.weapon ~= -1 and YELLOW or nil,
+        [2] = this.char.equipment.armor ~= -1 and YELLOW or nil,
     }
 
     x, y = this.panels.equipPanel:getAnchors()
@@ -99,12 +99,12 @@ function Inventory.new(parent)
         },
         values =
         {
-            gWorld:getStat(gWorld:getCurrentMember(), "hp_max"),
-            gWorld:getStat(gWorld:getCurrentMember(), "mp_max"),
-            gWorld:getStat(gWorld:getCurrentMember(), "strength"),
-            gWorld:getStat(gWorld:getCurrentMember(), "defense"),
-            gWorld:getStat(gWorld:getCurrentMember(), "magic"),
-            gWorld:getStat(gWorld:getCurrentMember(), "resist"),
+            gWorld:getStat(this.char, "hp_max"),
+            gWorld:getStat(this.char, "mp_max"),
+            gWorld:getStat(this.char, "strength"),
+            gWorld:getStat(this.char, "defense"),
+            gWorld:getStat(this.char, "magic"),
+            gWorld:getStat(this.char, "resist"),
         }
     }
 
@@ -132,7 +132,7 @@ function Inventory:onClick(index, id)
         local cursor = self.selections[1].cursor
 
         local data = {}
-        local equip = gWorld:getCurrentMember().equipment
+        local equip = self.char.equipment
         if item.type == "useable" then
             table.insert(data, "Use")
         elseif item.type == "weapon" then
@@ -165,13 +165,13 @@ function Inventory:onClick(index, id)
         local select = self.selections[1]
         local item = ItemDB[select.data[select.cursor]]
         if id == "Use" then
-            local stats = gWorld:getCurrentMember().stats
+            local stats = self.char.stats
             if item.use.hp and stats.hp < stats.hp_max then
                 stats.hp = math.min(stats.hp_max, stats.hp + item.use.hp)
                 self:useItem(item.use.hp, GREEN)
             elseif item.use.mp and stats.mp < stats.mp_max then
                 stats.mp = math.min(stats.mp_max, stats.mp + item.use.mp)
-                self:useItem(item.use.hp, BLUE)
+                self:useItem(item.use.mp, BLUE)
             end
         elseif id == "Equip" then
             gWorld:equip(item.type, item)
@@ -212,7 +212,7 @@ end
 function Inventory:useItem(num, color)
     self:removeItem()
     gStack:pop()
-    local hero = gStack:top().hero
+    local hero = gGame.hero
     local x, y = hero:centerPosition()
     createFloatAt(x, y, "+" .. num, 0.8, color)
     hero:wait(1)
@@ -226,12 +226,12 @@ end
 function Inventory:updateStatList()
     self.statList.values =
     {
-        gWorld:getStat(gWorld:getCurrentMember(), "hp_max"),
-        gWorld:getStat(gWorld:getCurrentMember(), "mp_max"),
-        gWorld:getStat(gWorld:getCurrentMember(), "strength"),
-        gWorld:getStat(gWorld:getCurrentMember(), "defense"),
-        gWorld:getStat(gWorld:getCurrentMember(), "magic"),
-        gWorld:getStat(gWorld:getCurrentMember(), "resist"),
+        gWorld:getStat(self.char, "hp_max"),
+        gWorld:getStat(self.char, "mp_max"),
+        gWorld:getStat(self.char, "strength"),
+        gWorld:getStat(self.char, "defense"),
+        gWorld:getStat(self.char, "magic"),
+        gWorld:getStat(self.char, "resist"),
     }
 end
 

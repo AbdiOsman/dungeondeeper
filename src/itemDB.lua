@@ -62,12 +62,22 @@ ItemDB =
         }
     },
     {
-        name = "Mushroom",
+        name = "Wonder Berry",
         type = "useable",
-        description = "Restores a minor amount. +1 MP",
+        description = "Heals a minor amount. +3 HP",
         use =
         {
-            mp = 1,
+            hp = 3,
+            hint = "Choose target to heal."
+        }
+    },
+    {
+        name = "Ire Shroom",
+        type = "useable",
+        description = "Restores a minor amount. +2 MP",
+        use =
+        {
+            mp = 2,
             hint = "Choose target to heal."
         }
     }

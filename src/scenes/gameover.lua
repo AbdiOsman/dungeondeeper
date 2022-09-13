@@ -21,7 +21,8 @@ function GameOver:update(dt)
     if Input.justPressed("accept") and self.tween:isFinished() then
         gStack:pop()
         gStack:pop()
-        gStack:push(Game.new(gStack, Map.new(require "data.maps.map_1"), { x = 2, y = 3 }))
+        gGame = Game.new(gStack, Map.new(require "data.maps.map_1"), { x = 2, y = 3 })
+        gStack:push(gGame)
     end
 end
 

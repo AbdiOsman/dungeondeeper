@@ -22,8 +22,8 @@ gPartyStats =
     {
         hp = 5,
         hp_max = 5,
-        mp = 1,
-        mp_max = 1,
+        mp = 2,
+        mp_max = 2,
         strength = 2,
         defense = 2,
         magic = 5,
@@ -43,8 +43,8 @@ gEnemyStats =
             mp_max = 0,
             strength = 1,
             defense = 1,
-            magic = 0,
-            resist = 0
+            magic = 1,
+            resist = 1
         }
     }
 }

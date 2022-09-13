@@ -2,7 +2,7 @@
     [] Title Scene
     [] Town Scene
     [X] Game Over Scene
-    [X] Dungeon Scene
+    [X] Game Scene
 # UI
     [] Inventory
         [X] Equip
@@ -18,12 +18,14 @@
     [X] HP/MP Display
     [X] Panel
     [X] Textbox
+    [] If no Entity is Moving Can Open 
 # ENEMIES
     [] Bosses
     [] Path Finding
 # Mechanics
     [X] Damage Flash
     [] Spells/Skills
+        [] Shot
         [] Push
         [] Pull
         [] Press
@@ -32,4 +34,7 @@
         [X] Attack
     [] Party?
     [X] Fog of War
-    [] Random Dungeon
+    [] Random Dungeon?
+    [] Fix Turn Order
+    [] Increase Base Font Size
+    [] Basic Town Events

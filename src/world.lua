@@ -13,13 +13,8 @@ function World.new()
             { id = 3 },
             { id = 4 },
             { id = 5 },
-            { id = 5 },
-            { id = 5 },
-            { id = 5 },
-            { id = 5 },
-            { id = 5 },
-            { id = 5 },
             { id = 6 },
+            { id = 7 },
         },
         party =
         {
@@ -33,6 +28,10 @@ function World.new()
                     armor = -1,
                     acc1 = -1,
                     acc2 = -1,
+                },
+                spells =
+                {
+                    { id = 1 },
                 }
             }
         },

@@ -1,6 +1,5 @@
-# DUNGEON DEEPER
+# Adventures in Bluehaven
 
-Dungeon Deeper is a turn based dungeon crawler.
-Delve into dungeons to gather wealth and gain power.
+Adventures in Bluehaven is a turn based adventure game.
 
 ![Screenshot](screenshot.png)

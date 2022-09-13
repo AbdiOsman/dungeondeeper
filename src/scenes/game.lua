@@ -8,7 +8,10 @@ function Game.new(stack, map, startpos)
         map = map,
         lower = {},
         upper = {},
-        hud = HUD.new(450, 0, 189, 23)
+        hud = HUD.new(450, 0, 189, 23),
+        casting = nil,
+        castX = 0,
+        castY = 1
     }
 
     setmetatable(this, Game)
@@ -36,6 +39,8 @@ end
 function Game:update(dt)
     if Input.justPressed("cancel") then
         gStack:push(Menu.new())
+    elseif Input.justPressed("cast") then
+        gStack:push(Cast.new())
     end
     self:updatelayers(dt)
     for _, v in pairs(self.map.entities) do
@@ -75,9 +80,60 @@ function Game:draw()
         for _, v in pairs(self.upper) do
             v:draw()
         end
+        if self.casting then
+            self:drawcast()
+        end
     Camera:detach()
     self.hud:draw(self.hero)
     -- self:printInfo()
+end
+
+function dashLine( p1, p2, dash, gap )
+	local dy, dx = p2.y - p1.y, p2.x - p1.x
+	local an, st = math.atan2( dy, dx ), dash + gap
+	local len = math.sqrt( dx*dx + dy*dy )
+	local nm = ( len - dash ) / st
+
+	love.graphics.push()
+	love.graphics.translate( p1.x, p1.y )
+	love.graphics.rotate( an )
+	for i = 0, nm do
+		love.graphics.line( i * st, 0, i * st + dash, 0 )
+	end
+	love.graphics.line( nm * st, 0, nm * st + dash,0 )
+	love.graphics.pop()
+end
+
+function Game:drawcast()
+    if self.casting == "line" then
+        love.graphics.setLineStyle("rough")
+        love.graphics.setLineWidth(2)
+        -- love.graphics.line
+        local x, y = self.hero:centerPosition()
+        local tx, ty = self:getCastTarget()
+
+        local p1 = { x = x + self.castX * 8, y = y + self.castY * 8 }
+        local p2 = { x = tx * TILESIZE + TILESIZE/2, y = ty * TILESIZE + TILESIZE/2 }
+
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.line(p1.x + self.castY, p1.y + self.castX, p2.x + self.castY, p2.y + self.castX)
+        love.graphics.line(p1.x - self.castY, p1.y - self.castX, p2.x - self.castY, p2.y - self.castX)
+
+        love.graphics.setColor(1, 1, 1)
+        dashLine(p1, p2, 3, 4)
+        self.map.sprite:drawq(tx * TILESIZE, ty * TILESIZE, 11)
+    end
+end
+
+function Game:getCastTarget()
+    local x, y = self.hero.tileX + self.castX, self.hero.tileY + self.castY
+
+    while self.map:isWalkable(x, y) do
+        x = x + self.castX
+        y = y + self.castY
+    end
+
+    return x, y
 end
 
 function Game:drawfog()

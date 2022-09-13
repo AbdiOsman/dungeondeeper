@@ -85,10 +85,18 @@ function Map:isBlocked(x, y)
     return props.blocker
 end
 
+function Map:isWalkable(x, y)
+    local props = self:gettileprops(x, y)
+    local index = self:tiletoindex(x, y)
+
+    return not props.blocker and not self.entities[index]
+end
+
 function Map:blockingSight(x, y)
     local props = self:gettileprops(x, y)
     return props.blocksight
 end
+
 
 function Map:getEntity(x, y)
     local index = self:tiletoindex(x, y)

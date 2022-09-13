@@ -2,6 +2,7 @@ if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then require("lldebugger").star
 
 gStack = nil
 gWorld = nil
+gGame = nil
 
 function love.load()
 	require "src.startup.startup"
@@ -11,7 +12,8 @@ function love.load()
 	gWorld = World.new()
 
 	gStack = StateStack.new()
-	gStack:push(Game.new(gStack, Map.new(require "data.maps.map_1"), { x = 2, y = 3 }))
+	gGame = Game.new(gStack, Map.new(require "data.maps.map_1"), { x = 2, y = 3 })
+	gStack:push(gGame)
 end
 
 function love.update(dt)

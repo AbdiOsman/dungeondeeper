@@ -42,5 +42,5 @@ function Float:draw()
 end
 
 function createFloatAt(x, y, txt, dur, color)
-    table.insert(gStack:top().upper, Float.new({ x = x, y = y, anim_y = 18, duration = dur or 0.5, txt = txt, color = color or YELLOW }))
+    table.insert(gGame.upper, Float.new({ x = x, y = y, anim_y = 18, duration = dur or 0.5, txt = txt, color = color or YELLOW }))
 end
