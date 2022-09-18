@@ -1,4 +1,4 @@
-function attack(attacker, defender)
+function Attack(attacker, defender)
     local atk
     local def
     if attacker.player then
@@ -10,8 +10,8 @@ function attack(attacker, defender)
     end
 
     local start_hp = def.stats.hp
-    local damage = gWorld:getStat(atk, "strength")
-    local defense = gWorld:getStat(def, "defense")
+    local damage = gWorld:GetStat(atk, "strength")
+    local defense = gWorld:GetStat(def, "defense")
 
     local rand = love.math.random(1, 100)
     local min = rand < 15 and 0 or 1 -- if attack < 0 chance to do a min of 1 attack
@@ -26,25 +26,25 @@ function attack(attacker, defender)
         def.stats.hp = hp
     end
 
-    love.audio.play("hit.wav")
+    Sound:Play("hit.wav")
     defender.sprite.flashtime = 12
 
-    local x, y = defender:centerPosition()
+    local x, y = defender:CenterPosition()
     if attack == 0 then
-        createFloatAt(x, y, "MISS!", 0.6, RED)
+        CreateFloatAt(x, y, "MISS!", 0.6, RED)
     else
-        createFloatAt(x, y, "-" .. attack, nil, RED)
+        CreateFloatAt(x, y, "-" .. attack, nil, RED)
     end
 
     if defender.player then
         if hp <= 0 then
-            local game = gStack:top()
-            gStack:push(GameOver.new(gStack, game))
+            local game = gStack:Top()
+            gStack:Push(GameOver.new(gStack, game))
         end
     end
 end
 
-function spellCast(attacker, defender, spell)
+function SpellCast(attacker, defender, spell)
     local atk
     local def
     if attacker.player then
@@ -60,8 +60,8 @@ function spellCast(attacker, defender, spell)
     local defense = 0
 
     if spell.element == "none" then
-        damage = (gWorld:getStat(atk, "magic") * 0.4) + spell.damage
-        defense = gWorld:getStat(def, "resist")
+        damage = (gWorld:GetStat(atk, "magic") * 0.4) + spell.damage
+        defense = gWorld:GetStat(def, "resist")
     else
     end
 
@@ -84,20 +84,20 @@ function spellCast(attacker, defender, spell)
         def.stats.hp = hp
     end
 
-    love.audio.play("hit.wav")
+    Sound:Play("hit.wav")
     defender.sprite.flashtime = 12
 
-    local x, y = defender:centerPosition()
+    local x, y = defender:CenterPosition()
     if attack == 0 then
-        createFloatAt(x, y, "MISS!", 0.6, RED)
+        CreateFloatAt(x, y, "MISS!", 0.6, RED)
     else
-        createFloatAt(x, y, "-" .. attack, nil, RED)
+        CreateFloatAt(x, y, "-" .. attack, nil, RED)
     end
 
     if defender.player then
         if hp <= 0 then
-            local game = gStack:top()
-            gStack:push(GameOver.new(gStack, game))
+            local game = gStack:Top()
+            gStack:Push(GameOver.new(gStack, game))
         end
     end
 end

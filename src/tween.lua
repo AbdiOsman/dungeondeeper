@@ -3,7 +3,7 @@ Tween.__index = Tween
 
 function Tween.new(start, finish, totalDuration, tweenF)
     local this = {
-        tweenF = tweenF or Tween.linear,
+        tweenF = tweenF or Tween.Linear,
         distance = finish - start,
         startValue = start,
         current = start,
@@ -17,7 +17,7 @@ function Tween.new(start, finish, totalDuration, tweenF)
     return this
 end
 
-function Tween:update(dt)
+function Tween:Update(dt)
     self.timePassed = self.timePassed + dt
     self.current = self.tweenF(self.timePassed, self.startValue, self.distance, self.totalDuration)
 
@@ -27,11 +27,11 @@ function Tween:update(dt)
     end
 end
 
-function Tween.linear(timePassed, start, distance, duration)
+function Tween.Linear(timePassed, start, distance, duration)
     return distance * timePassed / duration + start
 end
 
-function Tween.easeOutBounce(t, b, c, d)
+function Tween.EaseOutBounce(t, b, c, d)
     t = t / d
     if t < 1 / 2.75 then
         return c * (7.5625 * t * t) + b
@@ -59,10 +59,10 @@ function Tween.inOutBack(t, b, c, d, s)
     end
 end
 
-function Tween:isFinished()
+function Tween:IsFinished()
     return self.finished
 end
 
-function Tween:value()
+function Tween:Value()
     return self.current
 end

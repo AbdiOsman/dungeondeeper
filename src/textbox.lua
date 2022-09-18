@@ -7,7 +7,7 @@ function Textbox.new(args)
         txtarray = args.text,
         txtindex = 1,
         continueindex = 33,
-        continuecaret = Sprite.new(Texture.find("tileset.png")),
+        continuecaret = Sprite.new(Texture.Find("tileset.png")),
         rect = args.rect,
         bounds = args.bounds,
         wrap = args.wrap or -1,
@@ -22,51 +22,55 @@ function Textbox.new(args)
 
     setmetatable(this, Textbox)
 
-    this.panel:centerPosition(this.rect.x, this.rect.y, this.rect.width, this.rect.height)
+    this.panel:CenterPosition(this.rect.x, this.rect.y, this.rect.width, this.rect.height)
 
     return this
 end
 
-function Textbox:update(dt)
+function Textbox:Update(dt)
     self.time = self.time + dt
-    if self:isClosed() then
-        gStack:pop()
-    end
-end
-
-function Textbox:handleInput(dt)
-    if Input.justPressed("toggle") then
-        self.visible = not self.visible
+    if self:IsClosed() then
+        gStack:Pop()
     end
 
     if not self.visible then return end
 
-    if Input.justPressed("accept") then
+    if Input.JustPressed("accept") then
         if self.txtindex < #self.txtarray then
             self.txtindex = self.txtindex + 1
         else
             self.closed = true
         end
-    elseif Input.held("speed") and TIME % 8 == 0 then
+    end
+end
+
+function Textbox:HandleInput(dt)
+    if Input.JustPressed("toggle") then
+        self.visible = not self.visible
+    end
+
+    if not self.visible then return end
+
+    if Input.Held("speed") and TIME % 8 == 0 then
         if self.txtindex < #self.txtarray then
             self.txtindex = self.txtindex + 1
         end
     end
 end
 
-function Textbox:enter() end
-function Textbox:exit() end
+function Textbox:Enter() end
+function Textbox:Exit() end
 
-function Textbox:isClosed()
+function Textbox:IsClosed()
     return self.closed
 end
 
-function Textbox:draw()
+function Textbox:Draw()
     if not self.visible then return end
 
     love.graphics.setFont(Font.monogram_16)
 
-    local left, top, right, bottom = self.panel:getAnchors()
+    local left, top, right, bottom = self.panel:GetAnchors()
     local textLeft = left + self.bounds.left
     local textTop = top + self.bounds.top
 
@@ -75,7 +79,7 @@ function Textbox:draw()
     end
 
     if not self.hidepanel then
-        self.panel:draw()
+        self.panel:Draw()
     end
 
     if self.wrap ~= -1 then
@@ -89,7 +93,7 @@ function Textbox:draw()
         local w = right - left
         local h = bottom - top
         love.graphics.setScissor((left + w/2) - 8, (top + h) - 6, TILESIZE, TILESIZE)
-        self.continuecaret:drawq((left + w/2) - 8, (top + h) + offset, self.continueindex)
+        self.continuecaret:Drawq((left + w/2) - 8, (top + h) + offset, self.continueindex)
         love.graphics.setScissor()
     end
 
@@ -98,7 +102,7 @@ function Textbox:draw()
     end
 end
 
-function createFixedBox(x, y, width, height, text, args)
+function CreateFixedBox(x, y, width, height, text, args)
     args = args or {}
 
     local title = args.title
@@ -111,7 +115,7 @@ function createFixedBox(x, y, width, height, text, args)
     love.graphics.setFont(Font.monogram_16)
 
     if title then
-        _, h = measureText(title, wrap)
+        _, h = MeasureText(title, wrap)
         boundsTop = h + padding * 2
         title =
         {
@@ -124,11 +128,11 @@ function createFixedBox(x, y, width, height, text, args)
     --
     -- Section text into box size txtarray.
     --
-    local _, h = measureText(text)
+    local _, h = MeasureText(text)
     local faceHeight = math.ceil(h)
     local current = 1
 
-    local wrptext = getWrap(text, wrap)
+    local wrptext = GetWrap(text, wrap)
 
     local boundsHeight = height - (boundsTop)
     local currentHeight = faceHeight
@@ -181,7 +185,7 @@ function createFixedBox(x, y, width, height, text, args)
     }
 end
 
-function createFittedBox(x, y, text, wrap, args)
+function CreateFittedBox(x, y, text, wrap, args)
     args = args or {}
     local choices = args.choices
     local title = args.title
@@ -189,12 +193,12 @@ function createFittedBox(x, y, text, wrap, args)
 
     local padding = 6
 
-    local w, h = measureText(text, wrap)
+    local w, h = MeasureText(text, wrap)
     local width = w + padding + 8
     local height = h + 8
 
     if title then
-        w, h = measureText(title, wrap)
+        w, h = MeasureText(title, wrap)
         height = height + padding + h
         width = math.max(width, w + padding * 2)
     end
@@ -208,5 +212,5 @@ function createFittedBox(x, y, text, wrap, args)
     --     height = math.max(height, avatarHeight + padding)
     -- end
 
-    return createFixedBox(x, y, width, height, text, args)
+    return CreateFixedBox(x, y, width, height, text, args)
 end

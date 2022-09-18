@@ -13,18 +13,18 @@ function Inventory.new(parent)
             equipPanel = Panel.new(),
             statsPanel = Panel.new(),
         },
-        char = gWorld:getCurrentMember(),
+        char = gWorld:GetCurrentMember(),
         current = 1,
         closed = false,
     }
 
     setmetatable(this, Inventory)
 
-    this.panels.invPanel:centerPosition(GW/2, GH/2, 135, 155)
-    this.panels.descPanel:position(GW/2 - 135/2, GH/2 - 155/2 - 29, 135, 30)
-    this.panels.namePanel:position(GW/2 + 135/2 + 1, GH/2 - 155/2 - 29, 60, 30)
-    this.panels.equipPanel:position(GW/2 + 135/2 + 1, GH/2 - 155/2, 150, 67)
-    this.panels.statsPanel:position(GW/2 + 135/2 + 1, GH/2 - 10, 150, 87)
+    this.panels.invPanel:CenterPosition(GW/2, GH/2, 135, 155)
+    this.panels.descPanel:Position(GW/2 - 135/2, GH/2 - 155/2 - 29, 135, 30)
+    this.panels.namePanel:Position(GW/2 + 135/2 + 1, GH/2 - 155/2 - 29, 60, 30)
+    this.panels.equipPanel:Position(GW/2 + 135/2 + 1, GH/2 - 155/2, 150, 67)
+    this.panels.statsPanel:Position(GW/2 + 135/2 + 1, GH/2 - 10, 150, 87)
 
     this.usePanel = Panel.new()
 
@@ -33,7 +33,7 @@ function Inventory.new(parent)
         table.insert(data, v.id)
     end
 
-    local x, y = this.panels.invPanel:getAnchors()
+    local x, y = this.panels.invPanel:GetAnchors()
     this.selections =
     {
         [1] = Selection.new
@@ -44,11 +44,11 @@ function Inventory.new(parent)
             height = 155,
             rows = 25,
             data = data,
-            remap = function (id)
+            ReMap = function (id)
                 if not id then return end
                 return ItemDB[id].name
             end,
-            onSelection = function(...) this:onClick(...) end
+            OnSelection = function(...) this:OnClick(...) end
         }
     }
 
@@ -58,7 +58,7 @@ function Inventory.new(parent)
         [2] = this.char.equipment.armor ~= -1 and YELLOW or nil,
     }
 
-    x, y = this.panels.equipPanel:getAnchors()
+    x, y = this.panels.equipPanel:GetAnchors()
     this.equipList = List.new
     {
         x = x,
@@ -81,7 +81,7 @@ function Inventory.new(parent)
         }
     }
 
-    x, y = this.panels.statsPanel:getAnchors()
+    x, y = this.panels.statsPanel:GetAnchors()
     this.statList = List.new
     {
         x = x,
@@ -99,20 +99,20 @@ function Inventory.new(parent)
         },
         values =
         {
-            gWorld:getStat(this.char, "hp_max"),
-            gWorld:getStat(this.char, "mp_max"),
-            gWorld:getStat(this.char, "strength"),
-            gWorld:getStat(this.char, "defense"),
-            gWorld:getStat(this.char, "magic"),
-            gWorld:getStat(this.char, "resist"),
+            gWorld:GetStat(this.char, "hp_max"),
+            gWorld:GetStat(this.char, "mp_max"),
+            gWorld:GetStat(this.char, "strength"),
+            gWorld:GetStat(this.char, "defense"),
+            gWorld:GetStat(this.char, "magic"),
+            gWorld:GetStat(this.char, "resist"),
         }
     }
 
     return this
 end
 
-function Inventory:update(dt)
-    if Input.justPressed("cancel") then
+function Inventory:Update(dt)
+    if Input.JustPressed("cancel") then
         if #self.selections == 1 then
             self.parent.openedSubMenu = false
         else
@@ -120,11 +120,11 @@ function Inventory:update(dt)
             self.current = #self.selections
         end
     else
-        self.selections[self.current]:handleInput(dt)
+        self.selections[self.current]:HandleInput(dt)
     end
 end
 
-function Inventory:onClick(index, id)
+function Inventory:OnClick(index, id)
     if id == nil then return end
 
     if self.current == 1 then
@@ -146,7 +146,7 @@ function Inventory:onClick(index, id)
         local h = Font.monogram_16:getHeight() * #data + 12
 
         local x, y = GW/2 + 40, self.selections[1].cursorY
-        self.usePanel:position(x, y, 65, h)
+        self.usePanel:Position(x, y, 65, h)
         table.insert(self.selections, Selection.new
         {
             x = x,
@@ -156,7 +156,7 @@ function Inventory:onClick(index, id)
             rows = #data,
             displayrows = #data,
             data = data,
-            onSelection = function(...) self:onClick(...) end
+            OnSelection = function(...) self:OnClick(...) end
         })
 
         self.lastindex = index
@@ -168,17 +168,17 @@ function Inventory:onClick(index, id)
             local stats = self.char.stats
             if item.use.hp and stats.hp < stats.hp_max then
                 stats.hp = math.min(stats.hp_max, stats.hp + item.use.hp)
-                self:useItem(item.use.hp, GREEN)
+                self:UseItem(item.use.hp, GREEN)
             elseif item.use.mp and stats.mp < stats.mp_max then
                 stats.mp = math.min(stats.mp_max, stats.mp + item.use.mp)
-                self:useItem(item.use.mp, BLUE)
+                self:UseItem(item.use.mp, BLUE)
             end
         elseif id == "Equip" then
-            gWorld:equip(item.type, item)
+            gWorld:Equip(item.type, item)
             if item.type == "weapon" then
-                self:equipItem(1, select, item)
+                self:EquipItem(1, select, item)
             elseif item.type == "armor" then
-                self:equipItem(2, select, item)
+                self:EquipItem(2, select, item)
             end
         elseif id == "Unequip" then
             if item.type == "weapon" then
@@ -188,8 +188,8 @@ function Inventory:onClick(index, id)
                 self.equipList.values[2] = ""
                 select.colors[2] = nil
             end
-            gWorld:unequip(item.type, nil)
-            self:updateStatList()
+            gWorld:Unequip(item.type, nil)
+            self:UpdateStatList()
         elseif id == "Throw" then
         elseif id == "Trash" then
             table.remove(select.data, select.cursor)
@@ -201,62 +201,62 @@ function Inventory:onClick(index, id)
     end
 end
 
-function Inventory:equipItem(slot, selection, item)
+function Inventory:EquipItem(slot, selection, item)
     self.equipList.values[slot] = item.name
-    self:updateStatList()
-    swap(selection.data, selection.cursor, slot)
-    swap(gWorld.items, selection.cursor, slot)
+    self:UpdateStatList()
+    Swap(selection.data, selection.cursor, slot)
+    Swap(gWorld.items, selection.cursor, slot)
     selection.colors[slot] = YELLOW
 end
 
-function Inventory:useItem(num, color)
-    self:removeItem()
-    gStack:pop()
+function Inventory:UseItem(num, color)
+    self:RemoveItem()
+    gStack:Pop()
     local hero = gGame.hero
-    local x, y = hero:centerPosition()
-    createFloatAt(x, y, "+" .. num, 0.8, color)
-    hero:wait(1)
+    local x, y = hero:CenterPosition()
+    CreateFloatAt(x, y, "+" .. num, 0.8, color)
+    hero:Wait(1)
 end
 
-function Inventory:removeItem()
+function Inventory:RemoveItem()
     table.remove(self.selections[1].data, self.selections[1].cursor)
     table.remove(gWorld.items, self.selections[1].cursor)
 end
 
-function Inventory:updateStatList()
+function Inventory:UpdateStatList()
     self.statList.values =
     {
-        gWorld:getStat(self.char, "hp_max"),
-        gWorld:getStat(self.char, "mp_max"),
-        gWorld:getStat(self.char, "strength"),
-        gWorld:getStat(self.char, "defense"),
-        gWorld:getStat(self.char, "magic"),
-        gWorld:getStat(self.char, "resist"),
+        gWorld:GetStat(self.char, "hp_max"),
+        gWorld:GetStat(self.char, "mp_max"),
+        gWorld:GetStat(self.char, "strength"),
+        gWorld:GetStat(self.char, "defense"),
+        gWorld:GetStat(self.char, "magic"),
+        gWorld:GetStat(self.char, "resist"),
     }
 end
 
-function Inventory:enter() end
-function Inventory:exit() end
+function Inventory:Enter() end
+function Inventory:Exit() end
 
-function Inventory:draw()
+function Inventory:Draw()
     for _, v in pairs(self.panels) do
-        v:draw()
+        v:Draw()
     end
-    self.selections[1]:draw()
-    self.equipList:drawv()
-    self.statList:drawv()
+    self.selections[1]:Draw()
+    self.equipList:Drawv()
+    self.statList:Drawv()
 
-    local left, top, right = self.panels.namePanel:getAnchors()
+    local left, top, right = self.panels.namePanel:GetAnchors()
     love.graphics.printf(self.char.name, left, top + 7, right - left, "center" )
 
     local data = self.selections[1].data[self.selections[1].cursor]
     if data then
-        left, top, right = self.panels.descPanel:getAnchors()
+        left, top, right = self.panels.descPanel:GetAnchors()
         love.graphics.printf(ItemDB[data].description, left + 4, top, (right - left) - 4, "left")
     end
 
     if self.current == 2 then
-        self.usePanel:draw()
-        self.selections[2]:draw()
+        self.usePanel:Draw()
+        self.selections[2]:Draw()
     end
 end

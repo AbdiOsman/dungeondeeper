@@ -9,20 +9,20 @@ function Sprite.new(img)
         whiteoutshader = love.graphics.newShader("data/shaders/whiteout.shader")
     }
 
-    this.quads = generate_quads(TILESIZE, TILESIZE, img)
+    this.quads = GenerateQuads(TILESIZE, TILESIZE, img)
 
     setmetatable(this, Sprite)
 
     return this
 end
 
-function Sprite:drawq(x, y, tile)
-    self:flash()
+function Sprite:Drawq(x, y, tile)
+    self:Flash()
     love.graphics.draw(self.img, self.quads[tile], x, y)
     love.graphics.setShader()
 end
 
-function Sprite:flash()
+function Sprite:Flash()
     if self.flashtime > 0 then
         love.graphics.setShader(self.whiteoutshader)
 

@@ -13,11 +13,11 @@ function StateStack.new()
     return this
 end
 
-function StateStack:update(dt)
-    -- update them and check input
+function StateStack:Update(dt)
+    -- Update them and check input
     for k = #self.states, 1, -1 do
         local v = self.states[k]
-        local continue = v:update(dt)
+        local continue = v:Update(dt)
         if not continue then
             break
         end
@@ -29,14 +29,14 @@ function StateStack:update(dt)
         return
     end
 
-    top:handleInput(dt)
+    top:HandleInput(dt)
 end
 
-function StateStack:draw()
+function StateStack:Draw()
     love.graphics.setCanvas(self.main_canvas)
     love.graphics.clear()
         for _, v in ipairs(self.states) do
-            v:draw()
+            v:Draw()
         end
     love.graphics.setCanvas()
 
@@ -46,18 +46,18 @@ function StateStack:draw()
     love.graphics.setBlendMode('alpha')
 end
 
-function StateStack:push(state)
+function StateStack:Push(state)
     table.insert(self.states, state)
-    state:enter()
+    state:Enter()
 end
 
-function StateStack:pop()
+function StateStack:Pop()
     local top = self.states[#self.states]
     table.remove(self.states)
-    top:exit()
+    top:Exit()
     return top
 end
 
-function StateStack:top()
+function StateStack:Top()
     return self.states[#self.states]
 end

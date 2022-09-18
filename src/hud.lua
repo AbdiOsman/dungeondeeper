@@ -7,17 +7,17 @@ function HUD.new(x, y, width, height)
         hp = Panel.new()
     }
 
-    this.hp:position(x, y, width, height)
+    this.hp:Position(x, y, width, height)
 
     setmetatable(this, HUD)
 
     return this
 end
 
-function HUD:draw(hero)
+function HUD:Draw(hero)
     love.graphics.setFont(Font.monogram_16)
-    self.hp:draw()
-    local left, top = self.hp:getAnchors()
+    self.hp:Draw()
+    local left, top = self.hp:GetAnchors()
 
     local stats = gWorld.party[hero.id].stats
 

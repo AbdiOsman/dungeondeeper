@@ -9,16 +9,16 @@ function Selection.new(args)
         width = args.width,
         height = args.height,
         data = args.data,
-        cursorsprite = Sprite.new(Texture.find("tileset.png")),
+        cursorsprite = Sprite.new(Texture.Find("tileset.png")),
         displaycursor = true,
         cursorY = 0,
         maxrows = args.rows or #args.data,
         displayrows = args.displayrows or 11,
         displaystart = 1,
         cursor = 1,
-        remap = args.remap or nil,
+        ReMap = args.ReMap or nil,
         colors = {},
-        onSelection = args.onSelection or function() end
+        OnSelection = args.OnSelection or function() end
     }
 
     setmetatable(this, Selection)
@@ -26,14 +26,15 @@ function Selection.new(args)
     return this
 end
 
-function Selection:update(dt)
-    if self:isClosed() then
-        gStack:pop()
+function Selection:Update(dt)
+    if self:IsClosed() then
+        -- TODO: reference to stack? in objects that use it?
+        gStack:Pop()
     end
 end
 
-function Selection:handleInput(dt)
-    if Input.justPressed("up") then
+function Selection:HandleInput(dt)
+    if Input.JustPressed("up") then
         self.cursor = math.max(self.cursor - 1, 0)
         if self.cursor < 1 then
             self.cursor = self.maxrows
@@ -41,7 +42,7 @@ function Selection:handleInput(dt)
         elseif self.cursor < self.displaystart then
             self.displaystart = self.displaystart - 1
         end
-    elseif Input.justPressed("down") then
+    elseif Input.JustPressed("down") then
         self.cursor = math.min(self.cursor + 1, self.maxrows + 1)
         if self.cursor > self.maxrows then
             self.cursor = 1
@@ -49,12 +50,15 @@ function Selection:handleInput(dt)
         elseif self.cursor >= self.displaystart + self.displayrows then
             self.displaystart = self.displaystart + 1
         end
-    elseif Input.justPressed("accept") then
-        self.onSelection(self.cursor, self.data[self.cursor])
+    elseif Input.JustPressed("accept") then
+        if self.data[self.cursor] == "Alice" then
+            local x
+        end
+        self.OnSelection(self.cursor, self.data[self.cursor])
     end
 end
 
-function Selection:draw()
+function Selection:Draw()
     love.graphics.setFont(Font.monogram_16)
     local f = love.graphics.getFont()
     local h = f:getHeight()
@@ -67,18 +71,18 @@ function Selection:draw()
     local finish = start + self.displayrows - 1
 
     if start > 1 then
-        self.cursorsprite:drawq(255 + 53, topOffset - 11, 35)
+        self.cursorsprite:Drawq(255 + 53, topOffset - 11, 35)
     end
 
     for i = start, finish do
         if self.cursor == i and self.displaycursor then
             self.cursorY = topOffset + 4
-            self.cursorsprite:drawq(self.x + 6, self.cursorY, 34)
+            self.cursorsprite:Drawq(self.x + 6, self.cursorY, 34)
         end
 
         if self.colors[i] then love.graphics.setColor(self.colors[i]) end
 
-        local txt = self.remap ~= nil and self.remap(self.data[i]) or self.data[i]
+        local txt = self.ReMap ~= nil and self.ReMap(self.data[i]) or self.data[i]
         if txt then
             love.graphics.print(txt, self.x + TILESIZE, topOffset + 4)
         else
@@ -92,16 +96,16 @@ function Selection:draw()
 
     if finish ~= self.maxrows then
         topOffset = topOffset - h
-        self.cursorsprite:drawq(255 + 53, topOffset + 7, 33)
+        self.cursorsprite:Drawq(255 + 53, topOffset + 7, 33)
     end
 
     love.graphics.setScissor()
 end
 
-function Selection:moveDisplayUp()
+function Selection:MoveDisplayUp()
     self.displaystart = self.displaystart - 1
 end
 
-function Selection:moveDisplayDown()
+function Selection:MoveDisplayDown()
     self.displaystart = self.displaystart + 1
 end

@@ -17,7 +17,7 @@ function List.new(args)
     return this
 end
 
-function List:drawv()
+function List:Drawv()
     love.graphics.setFont(Font.monogram_16)
     local f = love.graphics.getFont()
     local h = f:getHeight()

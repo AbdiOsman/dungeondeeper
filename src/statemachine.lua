@@ -6,10 +6,10 @@ function StateMachine.new(states)
 	{
 		empty =
 		{
-			draw = function() end,
-			update = function() end,
-			enter = function() end,
-			exit = function() end
+			Draw = function() end,
+			Update = function() end,
+			Enter = function() end,
+			Exit = function() end
 		},
 		states = states or {}, -- [name] -> [function that returns state]
 		current = nil,
@@ -24,17 +24,17 @@ function StateMachine.new(states)
     return this
 end
 
-function StateMachine:change(stateName, enterParams)
+function StateMachine:Change(stateName, enterParams)
 	assert(self.states[stateName]) -- state must exist!
-	self.current:exit()
+	self.current:Exit()
 	self.current = self.states[stateName]()
-	self.current:enter(enterParams)
+	self.current:Enter(enterParams)
 end
 
-function StateMachine:update(dt)
-	self.current:update(dt)
+function StateMachine:Update(dt)
+	self.current:Update(dt)
 end
 
-function StateMachine:draw(renderer)
-	self.current:draw(renderer)
+function StateMachine:Draw(renderer)
+	self.current:Draw(renderer)
 end

@@ -1,6 +1,6 @@
 Actions =
 {
-    spawnmobs = function (x, y, map)
+    SpawnMobs = function (x, y, map)
         return function (trigger, entity)
             local enemytable = { "slime" }
             local index = love.math.random(1, #enemytable)
@@ -8,38 +8,38 @@ Actions =
             local ent = Entity.new(entityDefs, map)
             ent.id = #gWorld.monsters + 1
             ent.mob = true
-            ent:setPosition(x * TILESIZE, y * TILESIZE)
-            map:addEntity(ent)
+            ent:SetPosition(x * TILESIZE, y * TILESIZE)
+            map:AddEntity(ent)
             table.insert(map.mobs, ent)
-            local statDef = shallowClone(gEnemyStats[enemytable[index]])
-            statDef.stats = shallowClone(statDef.stats)
+            local statDef = ShallowClone(gEnemyStats[enemytable[index]])
+            statDef.stats = ShallowClone(statDef.stats)
             table.insert(gWorld.monsters, statDef)
         end
     end,
-    addmsg = function(x, y, map, txt)
+    AddMsg = function(x, y, map, txt)
         return function(trigger, entity)
-            local onUse = function ()
-                gStack:push(createFixedBox(GW/2, GH/2, 200, 105, txt))
-                love.audio.play("chest.wav")
+            local OnUse = function ()
+                gStack:Push(CreateFixedBox(GW/2, GH/2, 200, 105, txt))
+                Sound:Play("chest.wav")
             end
 
-            trigger = { onUse = onUse }
-            map:addTrigger(trigger, x, y)
+            trigger = { OnUse = OnUse }
+            map:AddTrigger(trigger, x, y)
         end
     end,
-    adddoor = function (x, y, map)
+    AddDoor = function (x, y, map)
         return function (trigger, entity)
-            map.data[1].data[map:tiletoindex(x, y)] = 9
+            map.data[1].data[map:TileToIndex(x, y)] = 9
 
-            local onUse = function ()
-                love.audio.play("door.wav")
+            local OnUse = function ()
+                Sound:Play("door.wav")
 
-                map:removeTrigger(x, y)
-                map.data[1].data[map:tiletoindex(x, y)] = 10
+                map:RemoveTrigger(x, y)
+                map.data[1].data[map:TileToIndex(x, y)] = 10
             end
 
-            trigger = { onUse = onUse }
-            map:addTrigger(trigger, x, y)
+            trigger = { OnUse = OnUse }
+            map:AddTrigger(trigger, x, y)
         end
     end
 }

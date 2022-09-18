@@ -13,7 +13,7 @@ function Panel.new(color)
     return this
 end
 
-function Panel:draw()
+function Panel:Draw()
     love.graphics.setColor(self.color)
     love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
     love.graphics.setColor({ 0, 0, 0 })
@@ -21,11 +21,11 @@ function Panel:draw()
     love.graphics.setColor({ 1, 1, 1 })
 end
 
-function Panel:centerPosition(x, y, width, height)
-    self:position(x - width/2, y - height/2, width, height)
+function Panel:CenterPosition(x, y, width, height)
+    self:Position(x - width/2, y - height/2, width, height)
 end
 
-function Panel:position(x, y, width, height)
+function Panel:Position(x, y, width, height)
    self.x = x
    self.y = y
    self.width = width
@@ -35,10 +35,11 @@ function Panel:position(x, y, width, height)
    self.right, self.bottom = x + width, y + height
 end
 
-function Panel:getAnchors()
+function Panel:GetAnchors()
     return self.left, self.top, self.right, self.bottom
 end
 
-function Panel:getSize()
+-- TODO: Use this to get size
+function Panel:GetSize()
     return self.width, self.height
 end

@@ -11,8 +11,8 @@ function Settings.new(parent)
 
     setmetatable(this, Settings)
 
-    this.panel:position(250 + 2, 102, 230, 155)
-    local left, top = this.panel:getAnchors()
+    this.panel:Position(250 + 2, 102, 230, 155)
+    local left, top = this.panel:GetAnchors()
     this.selection = Selection.new
     {
         x = left,
@@ -34,50 +34,50 @@ function Settings.new(parent)
     return this
 end
 
-function Settings:update(dt)
-    self.selection:handleInput(dt)
+function Settings:Update(dt)
+    self.selection:HandleInput(dt)
 
-    if Input.justPressed("cancel") then
+    if Input.JustPressed("cancel") then
         self.parent.openedSubMenu = false
     end
 
     if self.selection.cursor == 1 then
-        if Input.justPressed("left") then
+        if Input.JustPressed("left") then
             MASTERVOLUME = math.max(0, MASTERVOLUME - 0.10)
-        elseif Input.justPressed("right") then
+        elseif Input.JustPressed("right") then
             MASTERVOLUME = math.min(1, MASTERVOLUME + 0.10)
         end
     elseif self.selection.cursor == 2 then
-        if Input.justPressed("left") then
+        if Input.JustPressed("left") then
             BGMVOLUME = math.max(0, BGMVOLUME - 0.10)
-        elseif Input.justPressed("right") then
+        elseif Input.JustPressed("right") then
             BGMVOLUME = math.min(1, BGMVOLUME + 0.10)
         end
     elseif self.selection.cursor == 3 then
-        if Input.justPressed("left") then
+        if Input.JustPressed("left") then
             SEVOLUME = math.max(0, SEVOLUME - 0.10)
-        elseif Input.justPressed("right") then
+        elseif Input.JustPressed("right") then
             SEVOLUME = math.min(1, SEVOLUME + 0.10)
         end
     elseif self.selection.cursor == 5 then
-        if Input.justPressed("right") then
+        if Input.JustPressed("right") then
             SCALE = SCALE % 2 + 1
-            resize(SCALE)
+            Resize(SCALE)
         end
     end
 end
 
-function Settings:onClick(index, id)
+function Settings:OnClick(index, id)
 end
 
-function Settings:enter() end
-function Settings:exit() end
+function Settings:Enter() end
+function Settings:Exit() end
 
-function Settings:draw()
-    self.panel:draw()
-    self.selection:draw()
+function Settings:Draw()
+    self.panel:Draw()
+    self.selection:Draw()
 
-    local x, y = self.panel:getAnchors()
+    local x, y = self.panel:GetAnchors()
     love.graphics.rectangle("fill", x + 120, y + 5, 2, 12)
     love.graphics.rectangle("fill", x + 120, y + 7, 100 * MASTERVOLUME, 8)
     love.graphics.rectangle("fill", x + 120, y + 19, 2, 12)

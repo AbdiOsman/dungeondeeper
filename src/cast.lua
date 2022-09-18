@@ -11,16 +11,16 @@ function Cast.new()
             namePanel = Panel.new(),
             statsPanel = Panel.new(),
         },
-        char = gWorld:getCurrentMember(),
+        char = gWorld:GetCurrentMember(),
         current = 1
     }
 
     setmetatable(this, Cast)
 
-    this.panels.invPanel:centerPosition(GW/2, GH/2, 135, 155)
-    this.panels.descPanel:position(GW/2 - 135/2, GH/2 - 155/2 - 29, 135, 30)
-    this.panels.namePanel:position(GW/2 + 135/2 + 1, GH/2 - 155/2 - 29, 60, 30)
-    this.panels.statsPanel:position(GW/2 + 135/2 + 1, GH/2 - 155/2, 150, 67)
+    this.panels.invPanel:CenterPosition(GW/2, GH/2, 135, 155)
+    this.panels.descPanel:Position(GW/2 - 135/2, GH/2 - 155/2 - 29, 135, 30)
+    this.panels.namePanel:Position(GW/2 + 135/2 + 1, GH/2 - 155/2 - 29, 60, 30)
+    this.panels.statsPanel:Position(GW/2 + 135/2 + 1, GH/2 - 155/2, 150, 67)
 
     this.usePanel = Panel.new()
 
@@ -29,7 +29,7 @@ function Cast.new()
         table.insert(data, v.id)
     end
 
-    local x, y = this.panels.invPanel:getAnchors()
+    local x, y = this.panels.invPanel:GetAnchors()
     this.selection = Selection.new
     {
         x = x,
@@ -38,14 +38,14 @@ function Cast.new()
         height = 155,
         rows = 25,
         data = data,
-        remap = function (id)
+        ReMap = function (id)
             if not id then return end
             return SpellDB[id].name
         end,
-        onSelection = function(...) this:onClick(...) end
+        OnSelection = function(...) this:OnClick(...) end
     }
 
-    x, y = this.panels.statsPanel:getAnchors()
+    x, y = this.panels.statsPanel:GetAnchors()
     this.statList = List.new
     {
         x = x,
@@ -69,31 +69,38 @@ function Cast.new()
     return this
 end
 
-function Cast:update(dt)
+function Cast:Update(dt)
     if gGame.casting then
-        if Input.justPressed("accept") then
-            local tx, ty = gGame:getCastTarget()
+        if Input.JustPressed("accept") then
+            local tx, ty = gGame:GetCastTarget()
 
-            if gGame.map:inBounds(tx, ty) then
-                local ent = gGame.map:getEntity(tx, ty)
+            if gGame.map:InBounds(tx, ty) then
+                local ent = gGame.map:GetEntity(tx, ty)
                 if ent then
-                    spellCast(gGame.hero, ent, self.spell)
+                    SpellCast(gGame.hero, ent, self.spell)
+                else
+                    local stats = gWorld.party[gGame.hero.id]
+                    stats.stats.mp = stats.stats.mp - self.spell.mp_cost
+
+                    if stats.stats.mp < 0 then
+                        stats.stats.mp = 0
+                    end
                 end
             end
 
-            gGame.hero:movement(gGame.castX, gGame.castY, true)
+            gGame.hero:Movement(gGame.castX, gGame.castY, true)
 
             gGame.casting = nil
             gGame.castX, gGame.castY = 0, 1
-            gStack:pop()
-        elseif Input.justPressed("cancel") then
+            gStack:Pop()
+        elseif Input.JustPressed("cancel") then
             gGame.casting = nil
         end
     else
-        if Input.justPressed("cancel") then
-            gStack:pop()
+        if Input.JustPressed("cancel") then
+            gStack:Pop()
         else
-            self.selection:handleInput(dt)
+            self.selection:HandleInput(dt)
         end
     end
 
@@ -110,56 +117,55 @@ function Cast:update(dt)
     end
 end
 
-function Cast:handleInput(dt)
+function Cast:HandleInput(dt)
     if gGame.casting then
-        if Input.justPressed("left") then
+        if Input.JustPressed("left") then
             gGame.castX = -1
             gGame.castY = 0
-        elseif Input.justPressed("right") then
+        elseif Input.JustPressed("right") then
             gGame.castX = 1
             gGame.castY = 0
-        elseif Input.justPressed("up") then
+        elseif Input.JustPressed("up") then
             gGame.castX = 0
             gGame.castY = -1
-        elseif Input.justPressed("down") then
+        elseif Input.JustPressed("down") then
             gGame.castX = 0
             gGame.castY = 1
         end
     end
 end
 
-function Cast:onClick(index, id)
+function Cast:OnClick(index, id)
     if id then
         self.spell = SpellDB[id]
         local hero = gWorld.party[gGame.hero.id]
-        local mp = gWorld:getStat(hero, "mp")
-        print(mp - self.spell.mp_cost)
+        local mp = gWorld:GetStat(hero, "mp")
         if mp - self.spell.mp_cost >= 0 then
             gGame.casting = self.spell.style
         end
     end
 end
 
-function Cast:enter() end
-function Cast:exit() end
+function Cast:Enter() end
+function Cast:Exit() end
 
-function Cast:draw()
+function Cast:Draw()
     if gGame.casting then return end
 
     for _, v in pairs(self.panels) do
-        v:draw()
+        v:Draw()
     end
 
-    self.statList:drawv()
+    self.statList:Drawv()
 
-    self.selection:draw()
+    self.selection:Draw()
 
-    local left, top, right = self.panels.namePanel:getAnchors()
+    local left, top, right = self.panels.namePanel:GetAnchors()
     love.graphics.printf(self.char.name, left, top + 7, right - left, "center" )
 
     local data = self.selection.data[self.selection.cursor]
     if data then
-        left, top, right = self.panels.descPanel:getAnchors()
+        left, top, right = self.panels.descPanel:GetAnchors()
         love.graphics.printf(SpellDB[data].description, left + 4, top, (right - left) - 4, "left")
     end
 end

@@ -1,4 +1,4 @@
-function shallowClone(t)
+function ShallowClone(t)
     local clone = {}
     for k, v in pairs(t) do
         clone[k] = v
@@ -6,17 +6,12 @@ function shallowClone(t)
     return clone
 end
 
-function resize(s, flags)
+function Resize(s, flags)
     love.window.setMode(s * GW, s * GH)
-    Camera:setScale(2, 2)
-    -- love.window.setMode(s * GW, s * GH, flags)
-    -- if flags and flags.fullscreen then
-    --     GW = love.graphics.getWidth() / 2
-    --     GH = love.graphics.getHeight() / 2
-    -- end
+    Camera:SetScale(2, 2)
 end
 
-function generate_quads(tileWidth, tileHeight, texture)
+function GenerateQuads(tileWidth, tileHeight, texture)
     local quads = {}
 
     local textureWidth = texture:getWidth()
@@ -40,11 +35,11 @@ function generate_quads(tileWidth, tileHeight, texture)
     return quads
 end
 
-function nextframe(anim, speed)
+function Nextframe(anim, speed)
     return math.floor(TIME / speed) % #anim + 1
 end
 
-function measureText(text, wrp)
+function MeasureText(text, wrp)
     local f = love.graphics.getFont()
 
     if not wrp then
@@ -57,18 +52,18 @@ function measureText(text, wrp)
     return w, h
 end
 
-function getWrap(text, wrp)
+function GetWrap(text, wrp)
     local f = love.graphics.getFont()
     local _, wrptext = f:getWrap(text, wrp)
     return wrptext
 end
 
-function dump(o)
+function Dump(o)
     if type(o) == 'table' then
         local s = '{\n'
         for k, v in pairs(o) do
             if type(k) ~= 'number' then k = '"' .. k .. '"' end
-            s = s .. '[' .. k .. '] = ' .. dump(v) .. ',\n'
+            s = s .. '[' .. k .. '] = ' .. Dump(v) .. ',\n'
         end
         return s .. '} '
     else
@@ -82,7 +77,7 @@ function Set(list)
     return set
 end
 
-function round(n)
+function Round(n)
     if n < 0 then
         return math.ceil(n - 0.5)
     else
@@ -90,13 +85,13 @@ function round(n)
     end
 end
 
-function nextlevel(level)
+function Nextlevel(level)
     local exponent = 1.5
     local baseXP = 1000
     return math.floor(baseXP * (level ^ exponent))
 end
 
-function uuid()
+function UUID()
     local fn = function(x)
         local r = math.random(16) - 1
         r = (x == "x") and (r + 1) or (r % 4) + 9
@@ -105,15 +100,15 @@ function uuid()
     return (("xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"):gsub("[xy]", fn))
 end
 
-function distance(ax, ay, bx, by)
+function Distance(ax, ay, bx, by)
     local dx, dy = ax - bx, ay - by
     return math.sqrt(dx * dx + dy * dy)
 end
 
-function lineofsite(x1, y1, x2, y2, map)
+function LineOfSite(x1, y1, x2, y2, map)
     local frst, sx, sy, dx, dy = true, 0, 0, 0, 0
 
-    if distance(x1, y1, x2, y2) == 1 then return true end
+    if Distance(x1, y1, x2, y2) == 1 then return true end
     if x1 < x2 then
         sx = 1
         dx = x2 - x1
@@ -131,7 +126,7 @@ function lineofsite(x1, y1, x2, y2, map)
     local err, e2 = dx - dy, nil
 
     while not (x1 == x2 and y1 == y2) do
-        if not frst and map:blockingSight(x1, y1) then return false end
+        if not frst and map:BlockingSight(x1, y1) then return false end
         frst = false
         e2 = err + err
         if e2 > -dy then
@@ -146,16 +141,16 @@ function lineofsite(x1, y1, x2, y2, map)
     return true
 end
 
-function clamp(x, a, b)
+function Clamp(x, a, b)
     return math.max(a, math.min(b, x))
 end
 
-function swap(t, a, b)
+function Swap(t, a, b)
     t[a], t[b] = t[b], t[a]
     return t
 end
 
-function count_all(f)
+function CountAll(f)
     local seen = {}
 	local count_table
 	count_table = function(t)
@@ -173,18 +168,18 @@ function count_all(f)
 	count_table(_G)
 end
 
-function type_count()
+function TypeCount()
 	local counts = {}
 	local enumerate = function (o)
-		local t = type_name(o)
+		local t = TypeName(o)
 		counts[t] = (counts[t] or 0) + 1
 	end
-	count_all(enumerate)
+	CountAll(enumerate)
 	return counts
 end
 
 global_type_table = nil
-function type_name(o)
+function TypeName(o)
 	if global_type_table == nil then
 		global_type_table = {}
 		for k,v in pairs(_G) do

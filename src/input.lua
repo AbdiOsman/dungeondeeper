@@ -3,19 +3,19 @@ Input = {}
 local key_states = {}
 local key_to_button = {mouse1 = 1, mouse2 = 2}
 
-function Input.bind(key, action)
+function Input.Bind(key, action)
     if not key_states[action] then key_states[action] = {pressed = false} end
     table.insert(key_states[action], key)
 end
 
-function Input.update(dt)
+function Input.Update(dt)
     for _, v in pairs(key_states) do
         v.pressed = false
     end
 end
 
 -- returns the current state of a given key
-function Input.held(...)
+function Input.Held(...)
     local keys = {}
     for _, v in ipairs(key_states[...]) do
         table.insert(keys, v)
@@ -23,7 +23,7 @@ function Input.held(...)
     return love.keyboard.isDown(keys)
 end
 
-function Input.mouseDown(...)
+function Input.MouseDown(...)
     local keys = {}
     for _, v in ipairs(key_states[...]) do
         v = key_to_button[v]
@@ -33,16 +33,16 @@ function Input.mouseDown(...)
 end
 
 -- returns if the key has been pressed this frame
-function Input.justPressed(action)
+function Input.JustPressed(action)
     return key_states[action].pressed
 end
 
 -- returns if the key has been released this frame
-function Input.justReleased(action)
+function Input.JustReleased(action)
     return key_states[action].pressed == false
 end
 
-function Input.hookLoveEvents()
+function Input.HookLoveEvents()
     function love.keypressed(key)
         for _, v in pairs(key_states) do
             for _, k in ipairs(v) do
@@ -66,4 +66,4 @@ function Input.hookLoveEvents()
      end
 end
 
-Input.hookLoveEvents()
+Input.HookLoveEvents()
