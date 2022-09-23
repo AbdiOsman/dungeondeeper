@@ -1,0 +1,4 @@
+-- TODO:
+    -- When player is in line of site add mob to BattleQueue
+    -- add player to top of queue, payer blocks fighters after it
+    -- enemies don't block and all act at the same time

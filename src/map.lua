@@ -19,21 +19,21 @@ function Map.new(args)
     this.pixelWidth = this.width * TILESIZE
     this.pixelHeight = this.height * TILESIZE
 
+    this.layerCount = #args.layers
+
     setmetatable(this, Map)
 
     return this
 end
 
-function Map:Draw()
+function Map:DrawLayer(layer)
     local left, top = self:PointToTile(Camera._x, Camera._y)
     local right, bottom = self:PointToTile(Camera._x + GW, Camera._y + GH)
 
     for y = top, bottom do
         for x = left, right do
-            local tile = self:Get(x, y)
-            if tile == 0 then
-                self.sprite:Drawq(x * TILESIZE, y * TILESIZE, 49)
-            else
+            local tile = self:Get(x, y, layer)
+            if tile > 0 then
                 self.sprite:Drawq(x * TILESIZE, y * TILESIZE, tile)
             end
         end
@@ -44,8 +44,9 @@ function Map:Draw()
     end
 end
 
-function Map:Get(x, y)
-    return self.data[1].data[self:TileToIndex(x, y)]
+function Map:Get(x, y, layer)
+    layer = layer or 1
+    return self.data[layer].data[self:TileToIndex(x, y)]
 end
 
 function Map:Set(x, y, value)
@@ -70,8 +71,8 @@ function Map:PointToTile(x, y)
     return tileX, tileY
 end
 
-function Map:GetTileProps(x, y)
-    local tile = self:Get(x, y)
+function Map:GetTileProps(x, y, layer)
+    local tile = self:Get(x, y, layer)
     for _, v in ipairs(self.props) do
         if v.id + 1 == tile then
             return v.properties
@@ -80,20 +81,20 @@ function Map:GetTileProps(x, y)
     return {}
 end
 
-function Map:IsBlocked(x, y)
-    local props = self:GetTileProps(x, y)
+function Map:IsBlocked(x, y, layer)
+    local props = self:GetTileProps(x, y, layer)
     return props.blocker
 end
 
-function Map:IsWalkable(x, y)
-    local props = self:GetTileProps(x, y)
+function Map:IsWalkable(x, y, layer)
+    local props = self:GetTileProps(x, y, layer)
     local index = self:TileToIndex(x, y)
 
     return not props.blocker and not self.entities[index]
 end
 
-function Map:BlockingSight(x, y)
-    local props = self:GetTileProps(x, y)
+function Map:BlockingSight(x, y, layer)
+    local props = self:GetTileProps(x, y, layer)
     return props.blocksight
 end
 
@@ -104,6 +105,7 @@ function Map:GetEntity(x, y)
 end
 
 function Map:AddEntity(entity)
+    -- TODO: Add Entities to layers
     local index = self:TileToIndex(entity.tileX, entity.tileY)
     assert(self.entities[index] == entity or self.entities[index] == nil)
     self.entities[index] = entity
@@ -132,5 +134,5 @@ function Map:GetTrigger(x, y)
 end
 
 function Map:InBounds(x, y)
-    return (x > 0 and x < self.width) and (y > 0 and y < self.height)
+    return (x >= 0 and x < self.width) and (y >= 0 and y < self.height)
 end

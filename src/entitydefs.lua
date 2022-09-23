@@ -5,15 +5,27 @@ gEntities =
         tileX = 1,
         tileY = 1,
         sightrange = 4,
-        anim = {17, 18, 17, 19}
+        anim = {61, 62, 63}
     },
     slime = {
         texture = "tileset.png",
         tileX = 1,
         tileY = 3,
         sightrange = 4,
-        anim = {20, 21, 22, 23}
+        anim = {64, 65, 66, 67}
+    },
+    door = {
+        texture = "tileset.png",
+        closed = 11,
+        open = 12
     }
+}
+
+gIcons =
+{
+    arrowdown = 76,
+    arrowright = 77,
+    arrowup = 78,
 }
 
 gPartyStats =

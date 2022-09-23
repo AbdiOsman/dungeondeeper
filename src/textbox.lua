@@ -6,7 +6,6 @@ function Textbox.new(args)
     {
         txtarray = args.text,
         txtindex = 1,
-        continueindex = 33,
         continuecaret = Sprite.new(Texture.Find("tileset.png")),
         rect = args.rect,
         bounds = args.bounds,
@@ -93,7 +92,7 @@ function Textbox:Draw()
         local w = right - left
         local h = bottom - top
         love.graphics.setScissor((left + w/2) - 8, (top + h) - 6, TILESIZE, TILESIZE)
-        self.continuecaret:Drawq((left + w/2) - 8, (top + h) + offset, self.continueindex)
+        self.continuecaret:Drawq((left + w/2) - 8, (top + h) + offset, gIcons.arrowdown)
         love.graphics.setScissor()
     end
 

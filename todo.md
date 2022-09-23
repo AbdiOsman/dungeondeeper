@@ -1,40 +1,57 @@
 # Scenes
-    [] Title Scene
-    [] Town Scene
+[]
+    []  Title Scene
+    []  Town Scene
+    []  Game Scene
     [X] Game Over Scene
-    [X] Game Scene
 # UI
+[]
+    [] All Turns Must Be Done 
     [] Inventory
         [X] Equip
         [X] Use
-        [] Throw
+        []  Throw
         [X] Trash
+    [X] Spells/Skills
     [X] Status
-    [] Save/Load
-    [] Settings
+    []  Save/Load
+    []  Settings
         [X] Audio
-        [] Window Scale
-        [] Fullscreen
+        []  Window Scale
+        []  Font Scale
+        []  Fullscreen
     [X] HP/MP Display
     [X] Panel
     [X] Textbox
-    [] If no Entity is Moving Can Open 
 # ENEMIES
+[]
     [] Bosses
     [] Path Finding
+        [X] Basic
 # Mechanics
-    [X] Damage Flash
+[]  
+    [] Turn Order
     [] Spells/Skills
-        [] Shot
-        [] Push
-        [] Pull
-        [] Press
-        [] Jump
+        [X] Player Usage
+        []  Enemy Usage
+        [X] Shot
+        []  Push
+        []  Pull
+        []  Press
+        []  Jump
     [X] Bump
-        [X] Attack
-    [] Party?
-    [X] Fog of War
-    [] Random Dungeon?
-    [] Fix Turn Order
-    [] Increase Base Font Size
-    [] Basic Town Events
+        [X] Player Attack
+        [X]  Enemy Attack
+    []  Party?
+    []  Fog of War
+        [X] Basic
+        []  Clear Gradually
+    [X] Damage Flash
+    []  Damage Numbers
+    []  Random Dungeon Rooms
+    []  Story Progression
+        []  Town Events
+    []  Can Exit Vertically or Horizontally
+        []  Transiton Entering New Area
+    []  Section Into One Screen Room
+        []  Transition Animation Entering Room

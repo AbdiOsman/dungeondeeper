@@ -38,8 +38,7 @@ function Attack(attacker, defender)
 
     if defender.player then
         if hp <= 0 then
-            local game = gStack:Top()
-            gStack:Push(GameOver.new(gStack, game))
+            gStack:Push(GameOver.new(gStack, gGame))
         end
     end
 end
@@ -96,8 +95,7 @@ function SpellCast(attacker, defender, spell)
 
     if defender.player then
         if hp <= 0 then
-            local game = gStack:Top()
-            gStack:Push(GameOver.new(gStack, game))
+            gStack:Push(GameOver.new(gStack, gGame))
         end
     end
 end

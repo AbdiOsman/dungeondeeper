@@ -28,7 +28,6 @@ end
 
 function Selection:Update(dt)
     if self:IsClosed() then
-        -- TODO: reference to stack? in objects that use it?
         gStack:Pop()
     end
 end
@@ -71,13 +70,13 @@ function Selection:Draw()
     local finish = start + self.displayrows - 1
 
     if start > 1 then
-        self.cursorsprite:Drawq(255 + 53, topOffset - 11, 35)
+        self.cursorsprite:Drawq(255 + 53, topOffset - 10, gIcons.arrowup)
     end
 
     for i = start, finish do
         if self.cursor == i and self.displaycursor then
             self.cursorY = topOffset + 4
-            self.cursorsprite:Drawq(self.x + 6, self.cursorY, 34)
+            self.cursorsprite:Drawq(self.x + 6, self.cursorY, gIcons.arrowright)
         end
 
         if self.colors[i] then love.graphics.setColor(self.colors[i]) end
@@ -96,7 +95,7 @@ function Selection:Draw()
 
     if finish ~= self.maxrows then
         topOffset = topOffset - h
-        self.cursorsprite:Drawq(255 + 53, topOffset + 7, 33)
+        self.cursorsprite:Drawq(255 + 53, topOffset + 7, gIcons.arrowdown)
     end
 
     love.graphics.setScissor()

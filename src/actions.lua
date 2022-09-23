@@ -29,13 +29,13 @@ Actions =
     end,
     AddDoor = function (x, y, map)
         return function (trigger, entity)
-            map.data[1].data[map:TileToIndex(x, y)] = 9
+            map.data[1].data[map:TileToIndex(x, y)] = gEntities.door.closed
 
             local OnUse = function ()
                 Sound:Play("door.wav")
 
                 map:RemoveTrigger(x, y)
-                map.data[1].data[map:TileToIndex(x, y)] = 10
+                map.data[1].data[map:TileToIndex(x, y)] = gEntities.door.open
             end
 
             trigger = { OnUse = OnUse }

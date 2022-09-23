@@ -1,3 +1,4 @@
+-- TODO: Rename to Dungeon?
 Game = {}
 Game.__index = Game
 
@@ -72,7 +73,10 @@ end
 
 function Game:Draw()
     Camera:Attach()
-        self.map:Draw()
+        local layerCount = self.map.layerCount
+        for i = 1, layerCount do
+            self.map:DrawLayer(i)
+        end
         for _, v in pairs(self.lower) do
             v:Draw()
         end
@@ -115,13 +119,17 @@ function Game:DrawCast()
         local p1 = { x = x + self.castX * 8, y = y + self.castY * 8 }
         local p2 = { x = tx * TILESIZE + TILESIZE/2, y = ty * TILESIZE + TILESIZE/2 }
 
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.line(p1.x + self.castY, p1.y + self.castX, p2.x + self.castY, p2.y + self.castX)
-        love.graphics.line(p1.x - self.castY, p1.y - self.castX, p2.x - self.castY, p2.y - self.castX)
+        if self.map:GetEntity(tx, ty) then
+            love.graphics.setColor(1, 0, 0)
+        else
+            love.graphics.setColor(1, 1, 1)
+        end
 
-        love.graphics.setColor(1, 1, 1)
-        DashLine(p1, p2, 3, 4)
-        self.map.sprite:Drawq(tx * TILESIZE, ty * TILESIZE, 11)
+        x, y = self.map:PointToTile(x, y)
+        if Distance(x, y, tx, ty) > 1 then
+            DashLine(p1, p2, 4, 2)
+        end
+        self.map.sprite:Drawq(tx * TILESIZE, ty * TILESIZE, 79)
     end
 end
 
@@ -150,7 +158,9 @@ end
 function Game:ClearFog(px, py)
     for x = 0, self.map.width do
         for y = 0, self.map.height do
-            if Distance(px, py, x, y) <= self.hero.sightrange and LineOfSite(px, py, x, y, self.map) then
+            local distance = Distance(px, py, x, y)
+            local sightrange = self.hero.sightrange
+            if distance <= sightrange and LineOfSite(px, py, x, y, self.map) then
                 self:ClearFogTile(x, y)
             end
         end

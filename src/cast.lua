@@ -76,7 +76,7 @@ function Cast:Update(dt)
 
             if gGame.map:InBounds(tx, ty) then
                 local ent = gGame.map:GetEntity(tx, ty)
-                if ent then
+                if ent and ent.mob then
                     SpellCast(gGame.hero, ent, self.spell)
                 else
                     local stats = gWorld.party[gGame.hero.id]
