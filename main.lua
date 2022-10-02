@@ -24,6 +24,9 @@ function love.update(dt)
 	gStack:Update(dt)
 	gWorld:Update(dt)
 	-- Test()
+	if Input.JustPressed("accept") then
+		love.graphics.captureScreenshot(os.time() .. ".png")
+	end
 	Input.Update(dt)
 	Sound:Update()
 end

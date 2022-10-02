@@ -1,7 +1,7 @@
 love.graphics.setDefaultFilter("nearest", "nearest")
 
-local icon = love.image.newImageData("art/icon.png")
-love.window.setIcon(icon)
+-- local icon = love.image.newImageData("art/icon.png")
+-- love.window.setIcon(icon)
 
 require "src.startup.dependencies"
 
