@@ -5,14 +5,14 @@ gEntities =
         tileX = 1,
         tileY = 1,
         sightrange = 4,
-        anim = {61, 62, 63}
+        anim = {91, 92, 93}
     },
     slime = {
         texture = "tileset.png",
         tileX = 1,
         tileY = 3,
         sightrange = 4,
-        anim = {64, 65, 66, 67}
+        anim = {64, 65}
     },
     door = {
         texture = "tileset.png",

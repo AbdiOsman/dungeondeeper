@@ -1,6 +1,6 @@
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then require("lldebugger").start() end
 
--- TODO: Pass to classes?
+-- TODO: Pass to classes, and get rid of globals?
 gStack = nil
 gWorld = nil
 gGame = nil
@@ -47,17 +47,30 @@ function NewGame(map)
 
     Actions.SpawnMobs(1, 7, map)()
     Actions.SpawnMobs(1, 9, map)()
-    Actions.SpawnMobs(3, 7, map)()
+    Actions.SpawnMobs(2, 6, map)()
+    Actions.SpawnMobs(3, 6, map)()
     Actions.SpawnMobs(5, 7, map)()
+    Actions.SpawnMobs(5, 1, map)()
+    Actions.SpawnMobs(5, 4, map)()
+    Actions.SpawnMobs(14, 1, map)()
+    Actions.SpawnMobs(22, 1, map)()
+    Actions.SpawnMobs(12, 14, map)()
+    Actions.SpawnMobs(17, 7, map)()
+    Actions.SpawnMobs(25, 6, map)()
+    Actions.SpawnMobs(27, 10, map)()
+    Actions.SpawnMobs(12, 11, map)()
+    Actions.SpawnMobs(1, 11, map)()
+    Actions.SpawnMobs(6, 13, map)()
+    Actions.SpawnMobs(13, 14, map)()
+    Actions.SpawnMobs(8, 18, map)()
+    Actions.SpawnMobs(4, 21, map)()
+    Actions.SpawnMobs(16, 20, map)()
+    Actions.SpawnMobs(21, 20, map)()
+    Actions.SpawnMobs(29, 20, map)()
 
-	Actions.AddDoor(2, 4, map)()
-	Actions.AddDoor(2, 8, map)()
-	Actions.AddDoor(4, 9, map)()
-	Actions.AddDoor(9, 7, map)()
-	Actions.AddDoor(10, 2, map)()
-	Actions.AddDoor(10, 6, map)()
+	Actions.AddMsg(2, 2, map, "Welcome To Dungeon Deeper!")()
 
-    Actions.AddMsg(2, 2, map, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")()
+	Sound:Play("the_field_of_dreams.mp3", "bgm")
 end
 
 -- function Test()

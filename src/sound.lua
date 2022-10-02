@@ -1,11 +1,8 @@
 Sound = {}
 
--- will hold the currently playing sources
 local sources = {}
 local soundfolder = "sound/"
 
--- check for sources that finished playing and remove them
--- add to love.Update
 function Sound:Update()
     local remove = {}
     for k, v in ipairs(sources) do
@@ -25,7 +22,6 @@ function Sound:Update()
     end
 end
 
--- overwrite love.audio.play to create and register source if needed
 local play = love.audio.play
 function Sound:Play(what, channel, how)
     local src = what
@@ -46,7 +42,6 @@ function Sound:Play(what, channel, how)
     return src
 end
 
--- stops a source
 local stop = love.audio.stop
 function Sound:Stop(src)
     if not src then return end
