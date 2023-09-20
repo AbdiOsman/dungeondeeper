@@ -1,5 +1,5 @@
-# Adventures in Bluehaven
+# Dungeondeeper
 
-Adventures in Bluehaven is a turn based adventure game.
+Dungeondeeper is a turn based adventure game.
 
 ![Screenshot](screenshot.png)
